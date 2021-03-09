@@ -4,8 +4,8 @@ import Card from '../../../components/Card';
 import Countdown, { CountdownRenderProps } from 'react-countdown';
 
 interface ProgressCountdownProps {
-  base: Date;
-  deadline: Date;
+  base: number;
+  deadline: number;
   description: string;
 }
 
@@ -17,11 +17,9 @@ const ProgressCountdown: React.FC<ProgressCountdownProps> = ({
   var now = new Date;
   var utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
   const percentage =
-    utc_timestamp >= deadline.getTime()
-    // Date.now() >= deadline.getTime()
+    utc_timestamp >= deadline
       ? 100
-      : ((utc_timestamp - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
-      // : ((Date.now() - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
+      : ((utc_timestamp - base) / (deadline - base)) * 100;
 
   const countdownRenderer = (countdownProps: CountdownRenderProps) => {
     const { days, hours, minutes, seconds } = countdownProps;
