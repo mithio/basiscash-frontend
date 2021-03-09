@@ -2,7 +2,7 @@
 
 # Basis Cash  Interface
 
-This is front-end repository of the [basis.cash](https://basis.cash/).
+This is front-end repository of the [mith.cash](https://mith.cash/).
 
 ## 💻 Set Up Environment
 
