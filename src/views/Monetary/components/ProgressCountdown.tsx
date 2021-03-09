@@ -20,7 +20,8 @@ const ProgressCountdown: React.FC<ProgressCountdownProps> = ({
     utc_timestamp >= deadline.getTime()
     // Date.now() >= deadline.getTime()
       ? 100
-      : ((Date.now() - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
+      : ((utc_timestamp - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
+      // : ((Date.now() - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
 
   const countdownRenderer = (countdownProps: CountdownRenderProps) => {
     const { days, hours, minutes, seconds } = countdownProps;
