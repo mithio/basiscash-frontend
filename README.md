@@ -1,6 +1,4 @@
-![Basis Cash Title Image](https://raw.githubusercontent.com/Basis-Cash/basiscash-protocol/master/assets/bg.jpeg)
-
-# Basis Cash  Interface
+# Mith Cash  Interface
 
 This is front-end repository of the [mith.cash](https://mith.cash/).
 
