@@ -14,8 +14,11 @@ const ProgressCountdown: React.FC<ProgressCountdownProps> = ({
   deadline,
   description,
 }) => {
+  var now = new Date;
+  var utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
   const percentage =
-    Date.now() >= deadline.getTime()
+    utc_timestamp >= deadline.getTime()
+    // Date.now() >= deadline.getTime()
       ? 100
       : ((Date.now() - base.getTime()) / (deadline.getTime() - base.getTime())) * 100;
 

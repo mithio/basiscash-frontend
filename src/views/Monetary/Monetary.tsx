@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import Container from '../../components/Container';
 import MonetaryBoardroomCard from './components/MonetaryBoardroomCard';
 import { commify } from 'ethers/lib/utils';
-import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
+import ProgressCountdown from './components/ProgressCountdown';
 import useBondOraclePriceInLastTWAP from '../../hooks/useBondOraclePriceInLastTWAP';
 import useCashStats from '../../hooks/useCashStats';
 
@@ -28,10 +28,12 @@ const Monetary: React.FC = () => {
     [cashStat],
   );
   const { prevAllocation, nextAllocation } = useTreasuryAllocationTimes();
-
+  var now = new Date;
+  var utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
   const prevEpoch = useMemo(
     () =>
-      nextAllocation.getTime() <= Date.now()
+      nextAllocation.getTime() <= utc_timestamp
+      // nextAllocation.getTime() <= Date.now()
         ? moment().utc().startOf('day').toDate()
         : prevAllocation,
     [prevAllocation, nextAllocation],
