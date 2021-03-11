@@ -33,7 +33,7 @@ const configurations: { [env: string]: Configuration } = {
     baseLaunchDate: new Date('2020-12-30T02:00:00Z'),
     bondLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
-    refreshInterval: 10000,
+    refreshInterval: 3000,
     gasLimitMultiplier: 1.1,
     curvDepositor: '0xA79828DF1850E8a3A3064576f380D90aECDD3359',
   },

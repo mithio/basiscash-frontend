@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import Container from '../../components/Container';
 import MonetaryBoardroomCard from './components/MonetaryBoardroomCard';
 import { commify } from 'ethers/lib/utils';
-import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
+import ProgressCountdown from './components/ProgressCountdown';
 import useBondOraclePriceInLastTWAP from '../../hooks/useBondOraclePriceInLastTWAP';
 import useCashStats from '../../hooks/useCashStats';
 
@@ -28,15 +28,26 @@ const Monetary: React.FC = () => {
     [cashStat],
   );
   const { prevAllocation, nextAllocation } = useTreasuryAllocationTimes();
+  var now = new Date;
+  var utc_hrs = now.getUTCHours();
+  var init_base_hrs = 2;
+  var prevAllocation_hr = init_base_hrs +Math.floor((utc_hrs - init_base_hrs) / 6) *6;
+  const prev_utc_timestamp = Date.UTC(now.getUTCFullYear(),now.getUTCMonth(), now.getUTCDate() , prevAllocation_hr, 0, 0, 0);
 
   const prevEpoch = useMemo(
     () =>
-      nextAllocation.getTime() <= Date.now()
-        ? moment().utc().startOf('day').toDate()
-        : prevAllocation,
+    prevAllocation_hr >=0?
+    prev_utc_timestamp:
+    moment(prev_utc_timestamp).subtract(6, 'hours').toDate().getTime(),
+      // nextAllocation.getTime() <= utc_timestamp
+      // // nextAllocation.getTime() <= Date.now()
+      //   ? moment().utc().startOf('day').toDate()
+      //   : prevAllocation,
     [prevAllocation, nextAllocation],
   );
-  const nextEpoch = useMemo(() => moment(prevEpoch).add(6, 'hours').toDate(), [prevEpoch]);
+
+  // const nextEpoch = useMemo(() => moment(prevEpoch).add(6, 'hours').toDate(), [prevEpoch]);
+  const nextEpoch = useMemo(() => moment(prevEpoch).add(6, 'hours').toDate().getTime(), [prevEpoch]);
 
   return (
     <Switch>
