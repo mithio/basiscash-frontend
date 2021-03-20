@@ -477,10 +477,9 @@ export class BasisCash {
     return await Boardroom.initiateRewardClaim();
   }
 
-  async getPendingEarningsOnBoardroom(epoch: number): Promise<BigNumber> {
-    return null;
-    // const Boardroom = this.currentBoardroom();
-    // return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+  async getPendingEarningsOnBoardroom(): Promise<TransactionResponse> {
+    const Boardroom = this.currentBoardroom();
+    return await Boardroom.initiateRewardClaim();
   }
 
   async withdrawShareFromBoardroom(amount: string): Promise<TransactionResponse> {
