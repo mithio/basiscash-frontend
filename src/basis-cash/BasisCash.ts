@@ -489,8 +489,8 @@ export class BasisCash {
 
   async harvestCashFromBoardroom(): Promise<TransactionResponse> {
     const Boardroom = this.currentBoardroom();
-    const earned = await Boardroom.earned(this.myAccount);
-    return await Boardroom.claimReward(earned);
+    // const earned = await Boardroom.earned(this.myAccount);
+    return await Boardroom.claimReward();
   }
 
   async harvestEpochCashFromBoardroom(epoch: number): Promise<TransactionResponse> {
