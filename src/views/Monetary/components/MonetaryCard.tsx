@@ -6,7 +6,7 @@ import gift from '../../../assets/img/gift.png';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
 import useHarvestEpochFromBoardroom from '../../../hooks/useHarvestEpochFromBoardroom';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
-import useEpochEarningsOnBoardroom from '../../../hooks/useEpochEarningsOnBoardroom';
+// import useEpochEarningsOnBoardroom from '../../../hooks/useEpochEarningsOnBoardroom';
 import { getDisplayBalance } from '../../../utils/formatBalance';
 
 interface MonetaryCardHeaderProps {
@@ -441,14 +441,14 @@ export const MonetaryStakeCard: React.FC<MonetaryStakeCardProps> = ({
   epoch,
 }) => {
   const { onReward } = useHarvestEpochFromBoardroom(epoch);
-  const earnedMIC = useEpochEarningsOnBoardroom(epoch);
+  // const earnedMIC = useEpochEarningsOnBoardroom(epoch);
 
   return (
     <StakeWrapper>
       <StakeTitle>{day}</StakeTitle>
       <StakeTitle>{fee}</StakeTitle>
       <StakeLogo src={pool} />
-      <StakeRewards>{getDisplayBalance(earnedMIC, 18, 3) + ' MIC2'}</StakeRewards>
+      {/* <StakeRewards>{getDisplayBalance(earnedMIC, 18, 3) + ' MIC2'}</StakeRewards>
       <StakeButton>
         {<MonetaryClaimButton
           text='Claim MIC2'
@@ -460,7 +460,7 @@ export const MonetaryStakeCard: React.FC<MonetaryStakeCardProps> = ({
           colorHover="#DBC087"
           backgroundColorHover="#43423F"
           color="#DBC087" />}
-      </StakeButton>
+      </StakeButton> */}
     </StakeWrapper>
   )
 }

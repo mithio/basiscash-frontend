@@ -16,6 +16,7 @@ import { getDisplayBalance } from '../../../utils/formatBalance';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
 import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
+import useInitiateRewardClaimFromBoardroom from '../../../hooks/useInitiateRewardClaimFromBoardroom';
 import useEarnings from '../../../hooks/useEarnings';
 import useModal from '../../../hooks/useModal';
 import useTokenBalance from '../../../hooks/useTokenBalance';
@@ -32,6 +33,7 @@ import useStakedEffectiveBalanceOnBoardroom from '../../../hooks/useStakedEffect
 const MonetaryBoardroomCard: React.FC = () => {
   const { color } = useContext(ThemeContext);
   const { onReward } = useHarvestFromBoardroom();
+  const { initiateRewardClaim } = useInitiateRewardClaimFromBoardroom();
 
   const basisCash = useBasisCash();
   const tokenBalance = useTokenBalance(basisCash.MIS2);
@@ -102,15 +104,37 @@ const MonetaryBoardroomCard: React.FC = () => {
             </>
           )}
       />
-      <MonetaryCardEffectiveBalance
+      {/* <MonetaryCardEffectiveBalance
         title='Effective Balance (for Epoch)'
         value={
           stakedEffectiveBalance
             ? `${getDisplayBalance(stakedEffectiveBalance)} MIS2`
             : '-'
         }
+      /> */}
+      <MonetaryCardFoot>
+        <MonetaryCardFootCell
+          title='Initiate Your Rewards Claim'
+          value={''}
+          button={<MonetaryClaimAllButton text='Initiate Rewards Claim (You can withdraw rewards after the 5 day delay)' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+        />
+      </MonetaryCardFoot>
+      <MonetaryCardEffectiveBalance
+        title='When you can withdraw'
+        value={ ' 00 : 00 : 00 ' }
       />
       <MonetaryCardFoot>
+        <MonetaryCardFootCell
+          title='Your Total Pending Rewards'
+          value={
+            earnedMIC
+              ? `${getDisplayBalance(earnedMIC)} MIC2`
+              : '-'
+          }
+          button={<MonetaryClaimAllButton text='Claim Your Pending Rewards (will reset the delay for all rewards)' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+        />
+      </MonetaryCardFoot>
+      {/* <MonetaryCardFoot>
         <MonetaryCardFootCell
           title='Your Total MIC2 Rewards'
           value={
@@ -120,7 +144,7 @@ const MonetaryBoardroomCard: React.FC = () => {
           }
           button={<MonetaryClaimAllButton text='Claim all MIC (subject to fee if within fee period)' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
-      </MonetaryCardFoot>
+      </MonetaryCardFoot> */}
       <StyledRow>
         <MonetaryStakeCard day={'Day 1'} fee={'(50% fee)'} epoch={0} />
         <MonetaryStakeCard day={'Day 2'} fee={'(40% fee)'} epoch={1} />

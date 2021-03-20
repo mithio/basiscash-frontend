@@ -206,7 +206,7 @@ export class BasisCash {
       .sub(USDTMICStakePoolRemain)
       .sub(USDTMISStakePoolRemain);
 
-    const boardroomBalance = await this.BAS.balanceOf(this.contracts.Boardroom1.address);
+    const boardroomBalance = await this.BAS.balanceOf(this.contracts.Boardroom3.address);
     const USDTMISPoolBalance = await this.BAS.balanceOf(this.basDai.address);
     const unstakedBalance = circulatingSupply.sub(boardroomBalance).sub(USDTMISPoolBalance);
 
@@ -424,7 +424,7 @@ export class BasisCash {
   }
 
   boardroomByVersion(version: string): Contract {
-    return this.contracts.Boardroom1;
+    return this.contracts.Boardroom3;
   }
 
   currentBoardroom(): Contract {
@@ -455,9 +455,10 @@ export class BasisCash {
   }
 
   async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {
-    const Boardroom = this.currentBoardroom();
-    const epoch = await Boardroom.getCheckpointEpoch();
-    return await Boardroom.getEpochUserBalance(this.myAccount, epoch);
+    return null;
+    // const Boardroom = this.currentBoardroom();
+    // const epoch = await Boardroom.getCheckpointEpoch();
+    // return await Boardroom.getEpochUserBalance(this.myAccount, epoch);
   }
 
   async getEarningsOnBoardroom(): Promise<BigNumber> {
@@ -466,8 +467,20 @@ export class BasisCash {
   }
 
   async getEpochEarningsOnBoardroom(epoch: number): Promise<BigNumber> {
+    return null;
+    // const Boardroom = this.currentBoardroom();
+    // return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+  }
+ 
+  async initiateRewardClaim(): Promise<TransactionResponse> {
     const Boardroom = this.currentBoardroom();
-    return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+    return await Boardroom.initiateRewardClaim();
+  }
+
+  async getPendingEarningsOnBoardroom(epoch: number): Promise<BigNumber> {
+    return null;
+    // const Boardroom = this.currentBoardroom();
+    // return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
   }
 
   async withdrawShareFromBoardroom(amount: string): Promise<TransactionResponse> {
@@ -482,9 +495,9 @@ export class BasisCash {
   }
 
   async harvestEpochCashFromBoardroom(epoch: number): Promise<TransactionResponse> {
-    const Boardroom = this.currentBoardroom();
-    const earned = await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
-    return await Boardroom.claimRewardsForEpoch(earned);
+    // const Boardroom = this.currentBoardroom();
+    // const earned = await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+    return null;
   }
 
   async exitFromBoardroom(): Promise<TransactionResponse> {
