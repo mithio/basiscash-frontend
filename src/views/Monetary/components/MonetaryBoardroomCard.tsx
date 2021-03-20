@@ -118,9 +118,9 @@ const MonetaryBoardroomCard: React.FC = () => {
       /> */}
       <MonetaryCardFoot>
         <MonetaryCardFootCell
-          title='Initiate Your Rewards Claim - It will reset the withdrawal delay'
+          title='Initiate Your Rewards Claim - You can withdraw rewards after the 5 day delay'
           value={''}
-          button={<MonetaryClaimAllButton text='Initiate Rewards Claim (You can withdraw rewards after the 5 day delay)' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+          button={<MonetaryClaimAllButton text='Initiate Rewards Claim (It will reset the withdrawal delay)' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot>
       <MonetaryCardEffectiveBalance
