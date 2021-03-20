@@ -17,6 +17,7 @@ import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
 import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
 import useInitiateRewardClaimFromBoardroom from '../../../hooks/useInitiateRewardClaimFromBoardroom';
+import usePendingWithdrawalTime from '../../../hooks/usePendingWithdrawalTime';
 import useEarnings from '../../../hooks/useEarnings';
 import useModal from '../../../hooks/useModal';
 import useTokenBalance from '../../../hooks/useTokenBalance';
@@ -34,6 +35,9 @@ const MonetaryBoardroomCard: React.FC = () => {
   const { color } = useContext(ThemeContext);
   const { onReward } = useHarvestFromBoardroom();
   const { initiateRewardClaim } = useInitiateRewardClaimFromBoardroom();
+  const pendingWithdrawalTime = usePendingWithdrawalTime();
+  var date = new Date(pendingWithdrawalTime * 1000);
+  var formattedTime = date.toLocaleString("en-US");
 
   const basisCash = useBasisCash();
   const tokenBalance = useTokenBalance(basisCash.MIS2);
@@ -114,14 +118,14 @@ const MonetaryBoardroomCard: React.FC = () => {
       /> */}
       <MonetaryCardFoot>
         <MonetaryCardFootCell
-          title='Initiate Your Rewards Claim'
+          title='Initiate Your Rewards Claim - It will reset the withdrawal delay'
           value={''}
           button={<MonetaryClaimAllButton text='Initiate Rewards Claim (You can withdraw rewards after the 5 day delay)' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot>
       <MonetaryCardEffectiveBalance
         title='When you can withdraw'
-        value={ ' 00 : 00 : 00 ' }
+        value={ pendingWithdrawalTime ? formattedTime : '-'}
       />
       <MonetaryCardFoot>
         <MonetaryCardFootCell

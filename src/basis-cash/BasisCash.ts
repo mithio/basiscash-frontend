@@ -454,6 +454,11 @@ export class BasisCash {
     return await Boardroom.balanceOf(this.myAccount);
   }
 
+  async pendingWithdrawalTime(): Promise<number> {
+    const Boardroom = this.currentBoardroom();
+    return await Boardroom.pendingWithdrawalTime(this.myAccount);
+  }
+  
   async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {
     return null;
     // const Boardroom = this.currentBoardroom();
