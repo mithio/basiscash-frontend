@@ -118,9 +118,9 @@ const MonetaryBoardroomCard: React.FC = () => {
       /> */}
       <MonetaryCardFoot>
         <MonetaryCardFootCell
-          title='Initiate Your Rewards Claim - You can withdraw rewards after the 5 day delay'
+          title='You can claim your rewards after 5 days since the claim started'
           value={''}
-          button={<MonetaryClaimAllButton text='Initiate Rewards Claim (It will reset the withdrawal delay)' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+          button={<MonetaryClaimAllButton text='Initiate Rewards Claim' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot>
       <MonetaryCardEffectiveBalance
@@ -135,7 +135,7 @@ const MonetaryBoardroomCard: React.FC = () => {
               ? `${getDisplayBalance(earnedMIC)} MIC2`
               : '-'
           }
-          button={<MonetaryClaimAllButton text='Claim Your Pending Rewards (will reset the delay for all rewards)' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+          button={<MonetaryClaimAllButton text='Claim Pending Rewards' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot>
       {/* <MonetaryCardFoot>

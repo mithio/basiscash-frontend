@@ -447,7 +447,7 @@ export const MonetaryStakeCard: React.FC<MonetaryStakeCardProps> = ({
     <StakeWrapper>
       <StakeTitle>{day}</StakeTitle>
       <StakeTitle>{fee}</StakeTitle>
-      <StakeLogo src={pool} />
+      {/* <StakeLogo src={pool} /> */}
       {/* <StakeRewards>{getDisplayBalance(earnedMIC, 18, 3) + ' MIC2'}</StakeRewards>
       <StakeButton>
         {<MonetaryClaimButton
