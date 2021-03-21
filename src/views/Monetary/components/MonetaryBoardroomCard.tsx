@@ -149,14 +149,14 @@ const MonetaryBoardroomCard: React.FC = () => {
           button={<MonetaryClaimAllButton text='Claim all MIC (subject to fee if within fee period)' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot> */}
-      <StyledRow>
+      {/* <StyledRow>
         <MonetaryStakeCard day={'Day 1'} fee={'(50% fee)'} epoch={0} />
         <MonetaryStakeCard day={'Day 2'} fee={'(40% fee)'} epoch={1} />
         <MonetaryStakeCard day={'Day 3'} fee={'(30% fee)'} epoch={2} />
         <MonetaryStakeCard day={'Day 4'} fee={'(20% fee)'} epoch={3} />
         <MonetaryStakeCard day={'Day 5'} fee={'(10% fee)'} epoch={4} />
         <MonetaryStakeCard day={'>Day 5'} fee={'(0% fee)'} epoch={5} />
-      </StyledRow>
+      </StyledRow> */}
     </Wrapper>
   )
 };
