@@ -39,7 +39,7 @@ export const HomeCard: React.FC<HomeCardProps> = ({
   return (
     <Wrapper>
       <CardHeader color={headerColor}>{title}</CardHeader>
-      <CardHeader color={headerColor}>V1 to V2</CardHeader>
+      <CardHeader color={headerColor}>V2 to V3</CardHeader>
       <StyledCards>
         <CardBody backgroundImg={backgroundImg}>
           <CardContent>
@@ -47,12 +47,12 @@ export const HomeCard: React.FC<HomeCardProps> = ({
             &nbsp;
             &nbsp;
             <CardSection>
-              <StyledV1Label>V1:</StyledV1Label>
+              <StyledV1Label>V2:</StyledV1Label>
               <StyledV1Value>{getDisplayBalance(v1Balance, 18, 6)}</StyledV1Value>
             </CardSection>
             <SwapButton>{button}</SwapButton>
             <CardSection>
-              <StyledV2Label>V2:</StyledV2Label>
+              <StyledV2Label>V3:</StyledV2Label>
               <StyledV2Value>{getDisplayBalance(v2Balance, 18, 6)}</StyledV2Value>
             </CardSection>
           </CardContent>
@@ -103,20 +103,20 @@ export const HomeCard2: React.FC<HomeCard2Props> = ({
   return (
     <Wrapper>
       <CardHeader color={headerColor}>{title}</CardHeader>
-      <CardHeader color={headerColor}>V1 to V2</CardHeader>
+      <CardHeader color={headerColor}>V2 to V3</CardHeader>
       {clickEvent ? <StyledCards2>
         <CardBody backgroundImg={micCardBorderClicked}>
           <CardContent>
             <StyledBalanceLabel>Your Balance</StyledBalanceLabel>
             <StyledBalanceLabel2>Staked LP Balance</StyledBalanceLabel2>
             <CardSection>
-              <StyledV1Label>V1:</StyledV1Label>
+              <StyledV1Label>V2:</StyledV1Label>
               <StyledV1Value>{getDisplayBalance(v1Balance, 18, 6)}</StyledV1Value>
             </CardSection>
             <SwapButton2>{button1}</SwapButton2>
             <SwapButton3>{button2}</SwapButton3>
             <CardSection>
-              <StyledV2Label>V2:</StyledV2Label>
+              <StyledV2Label>V3:</StyledV2Label>
               <StyledV2Value>{getDisplayBalance(v2Balance, 18, 6)}</StyledV2Value>
             </CardSection>
           </CardContent>

@@ -47,7 +47,7 @@ const MonetaryBoardroomCard: React.FC = () => {
 
   const boardroomVersion = useBoardroomVersion();
   const [approveStatus, approve] = useApprove(
-    basisCash.MIS2,
+    basisCash.MIS3,
     basisCash.boardroomByVersion(boardroomVersion).address,
   );
 
@@ -68,7 +68,7 @@ const MonetaryBoardroomCard: React.FC = () => {
         onStake(value);
         onDismissDeposit();
       }}
-      tokenName={'MIS2'}
+      tokenName={'MIS3'}
     />,
   );
 
@@ -79,7 +79,7 @@ const MonetaryBoardroomCard: React.FC = () => {
         onWithdraw(value);
         onDismissWithdraw();
       }}
-      tokenName={'MIS2'}
+      tokenName={'MIS3'}
     />,
   );
 
@@ -95,11 +95,11 @@ const MonetaryBoardroomCard: React.FC = () => {
         title='Staked Balance'
         value={
           stakedBalance
-            ? `${getDisplayBalance(stakedBalance)} MIS2`
+            ? `${getDisplayBalance(stakedBalance)} MIS3`
             : '-'
         }
         children={approveStatus !== ApprovalState.APPROVED ? (
-          <MonetaryCardButton text='Approve MIS2' onClick={approve} />
+          <MonetaryCardButton text='Approve MIS3' onClick={approve} />
         ) : (
             <>
               <MonetaryCardButton text='+' size='sm' onClick={onPresentDeposit} />
