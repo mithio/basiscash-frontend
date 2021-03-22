@@ -99,7 +99,7 @@ const Migration: React.FC = () => {
         />
         <Spacer size="lg" />
       </CardWrapper>
-      <CardWrapper>
+      {/* <CardWrapper>
         <ShowCards onClick={() => {}}>
           {micUsdtApproveStatus === ApprovalState.APPROVED ? (
             <HomeCard2
@@ -131,18 +131,7 @@ const Migration: React.FC = () => {
             />
           )}
         </ShowCards>
-        {/*<Spacer size="lg" />*/}
-        {/*<ShowCards onClick={() => { setMigrationCardShow(false); setMigrationCardShow2(!isMigrationCardShow2); }}>*/}
-        {/*  <HomeCard3*/}
-        {/*    title="MIB to MIC V2"*/}
-        {/*    backgroundImg={micCardBorder}*/}
-        {/*    headerColor="#4D6756"*/}
-        {/*    button={<MigrationButton text='SWAP' disabled={false} />}*/}
-        {/*    clickEvent={isMigrationCardShow2}*/}
-        {/*  />*/}
-        {/*</ShowCards>*/}
-        {/*<Spacer size="lg" />*/}
-      </CardWrapper>
+      </CardWrapper> */}
 
       {/*{isMigrationCardShow && (*/}
       {/*  <StyledRow>*/}
