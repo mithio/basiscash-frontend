@@ -536,7 +536,7 @@ export class BasisCash {
 
   async migrateMisV2ToV3() {
     const MisV2Migrate = this.contracts['MISV2Migrate'];
-    const balance = await this.BAS.balanceOf(this.myAccount);
+    const balance = await this.MIS2.balanceOf(this.myAccount);
     const gas = await MisV2Migrate.estimateGas.exchangeShares(balance);
     return await MisV2Migrate.exchangeShares(balance, this.gasOptions(gas));
   }
