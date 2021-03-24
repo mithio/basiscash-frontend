@@ -86,14 +86,14 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     finished: false,
     sort: 1,
   },
-  DAIBASLPTokenSharePool: {
-    name: 'MIS2-USDT Pool',
-    contract: 'USDTMISLPTokenSharePool',
-    depositTokenName: 'MIS2_USDT-SUSHI-LPv2',
-    earnTokenName: 'MIS',
-    finished: false,
-    sort: 2,
-  },
+  // DAIBASLPTokenSharePool: {
+  //   name: 'MIS2-USDT Pool',
+  //   contract: 'USDTMISLPTokenSharePool',
+  //   depositTokenName: 'MIS2_USDT-SUSHI-LPv2',
+  //   earnTokenName: 'MIS',
+  //   finished: false,
+  //   sort: 2,
+  // },
   MISLPTokenSharePool3: {
     name: 'MIS3-USDT Pool 3',
     contract: 'MISLPTokenSharePool3',
