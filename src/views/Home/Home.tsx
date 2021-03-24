@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   const shareStat = useShareStats();
 
   const cashAddr = useMemo(() => basisCash?.MIC2.address, [basisCash]);
-  const shareAddr = useMemo(() => basisCash?.MIS2.address, [basisCash]);
+  const shareAddr = useMemo(() => basisCash?.MIS3.address, [basisCash]);
 
   return (
     <Page>

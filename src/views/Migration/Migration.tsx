@@ -42,10 +42,10 @@ const Migration: React.FC = () => {
   const nextEpoch = useMemo(() => moment(prevEpoch).add(6, 'hours').toDate(), [prevEpoch]);
   const basisCash = useBasisCash();
 
-  const [micApproveStatus, micApprove] = useApprove(basisCash.BAC, basisCash.contracts['MICV1Migrate'].address);
-  const [misApproveStatus, misApprove] = useApprove(basisCash.BAS, basisCash.contracts['MISV1Migrate'].address);
-  const [micUsdtApproveStatus, micUsdtApprove] = useApprove(basisCash.externalTokens['MIC_USDT-SUSHI-LPv2'], basisCash.contracts['MICUSDTV1Migrate'].address);
-  const [misUsdtApproveStatus, misUsdtApprove] = useApprove(basisCash.externalTokens['MIS_USDT-SUSHI-LPv2'], basisCash.contracts['MISUSDTV1Migrate'].address);
+  // const [micApproveStatus, micApprove] = useApprove(basisCash.BAC, basisCash.contracts['MICV1Migrate'].address);
+  const [misApproveStatus, misApprove] = useApprove(basisCash.MIS2, basisCash.contracts['MISV2Migrate'].address);
+  const [micUsdtApproveStatus, micUsdtApprove] = useApprove(basisCash.externalTokens['MICv2_3CRV'], basisCash.contracts['MICUSDTV1Migrate'].address);
+  const [misUsdtApproveStatus, misUsdtApprove] = useApprove(basisCash.externalTokens['MIS2_USDT-SUSHI-LPv2'], basisCash.contracts['MISUSDTV2Migrate'].address);
 
   return !account ? (
     <Page>
@@ -56,7 +56,7 @@ const Migration: React.FC = () => {
   ) : (
     <Page>
       <CardWrapper>
-        <HomeCard
+        {/* <HomeCard
           title="MITH Cash (MIC)"
           backgroundImg={micCardBorder}
           headerColor="#4D6756"
@@ -69,19 +69,19 @@ const Migration: React.FC = () => {
           from={basisCash.BAC}
           to={basisCash.MIC2}
         />
-        <Spacer size="lg" />
+        <Spacer size="lg" /> */}
         <HomeCard
           title="MITH Shares (MIS)"
           backgroundImg={misCardBorder}
           headerColor="#426687"
           button={misApproveStatus === ApprovalState.APPROVED ? (
-            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.migrateMisV1ToV2()}} />
+            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.migrateMisV2ToV3()}} />
           ) : (
             <MigrationButton text='APPROVE' disabled={false} onClick={misApprove} />
           )}
-          contractName="MISV1Migrate"
-          from={basisCash.BAS}
-          to={basisCash.MIS2}
+          contractName="MISV2Migrate"
+          from={basisCash.MIS2}
+          to={basisCash.MIS3}
         />
         <Spacer size="lg" />
         <HomeCard
@@ -89,17 +89,17 @@ const Migration: React.FC = () => {
           backgroundImg={misCardBorder}
           headerColor="#426687"
           button={misUsdtApproveStatus === ApprovalState.APPROVED ? (
-            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.migrateMisUsdtV1ToV2()}} />
+            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.migrateMisUsdtV2ToV3()}} />
           ) : (
             <MigrationButton text='APPROVE' disabled={false} onClick={misUsdtApprove} />
           )}
-          contractName="MISUSDTV1Migrate"
-          from={basisCash.externalTokens['MIS_USDT-SUSHI-LPv2']}
-          to={basisCash.externalTokens['MIS2_USDT-SUSHI-LPv2']}
+          contractName="MISUSDTV2Migrate"
+          from={basisCash.externalTokens['MIS2_USDT-SUSHI-LPv2']}
+          to={basisCash.externalTokens['MIS3_USDT-SUSHI-LPv2']}
         />
         <Spacer size="lg" />
       </CardWrapper>
-      <CardWrapper>
+      {/* <CardWrapper>
         <ShowCards onClick={() => {}}>
           {micUsdtApproveStatus === ApprovalState.APPROVED ? (
             <HomeCard2
@@ -116,8 +116,8 @@ const Migration: React.FC = () => {
                                         onClick={() => {basisCash.migrateMicUsdtV1ToV2(false)}}/>}
               clickEvent={isMigrationCardShow}
               contractName="MICUSDTV1Migrate"
-              from={basisCash.externalTokens['MIC_USDT-SUSHI-LPv2']}
-              to={basisCash.externalTokens['MICv2_3CRV']}
+              from={basisCash.externalTokens['MICv2_3CRV']}
+              to={basisCash.externalTokens['MICv23CRV']}
             />
           ) : (
             <HomeCard
@@ -126,23 +126,12 @@ const Migration: React.FC = () => {
               headerColor="#4D6756"
               button={<MigrationButton text='APPROVE' disabled={false} onClick={micUsdtApprove} />}
               contractName="MICUSDTV1Migrate"
-              from={basisCash.externalTokens['MIC_USDT-SUSHI-LPv2']}
-              to={basisCash.externalTokens['MICv2_3CRV']}
+              from={basisCash.externalTokens['MICv2_3CRV']}
+              to={basisCash.externalTokens['MICv23CRV']}
             />
           )}
         </ShowCards>
-        {/*<Spacer size="lg" />*/}
-        {/*<ShowCards onClick={() => { setMigrationCardShow(false); setMigrationCardShow2(!isMigrationCardShow2); }}>*/}
-        {/*  <HomeCard3*/}
-        {/*    title="MIB to MIC V2"*/}
-        {/*    backgroundImg={micCardBorder}*/}
-        {/*    headerColor="#4D6756"*/}
-        {/*    button={<MigrationButton text='SWAP' disabled={false} />}*/}
-        {/*    clickEvent={isMigrationCardShow2}*/}
-        {/*  />*/}
-        {/*</ShowCards>*/}
-        {/*<Spacer size="lg" />*/}
-      </CardWrapper>
+      </CardWrapper> */}
 
       {/*{isMigrationCardShow && (*/}
       {/*  <StyledRow>*/}

@@ -68,7 +68,7 @@ const MISCard: React.FC<MISCardProps> = ({ bank }) => {
   if (bank.depositTokenName.includes('MIS')) {
     currency = 'MIS';
     currencyStats = shareStats;
-    purchaseLink = 'https://app.sushi.com/pair/0xf9fF921E63B525A73dD3cF57463da53138358A49';
+    purchaseLink = 'https://app.sushi.com/pair/0x097b21e4784c2b224fd8b880939f75b2e9f4dba5';
   } else if (bank.depositTokenName.includes('MIC')) {
     currency = 'MIC';
     currencyStats = cashStats;

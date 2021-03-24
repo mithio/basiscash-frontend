@@ -33,8 +33,10 @@ export class BasisCash {
 
   MIC2: ERC20;
   MIS2: ERC20;
+  MIS3: ERC20;
   mic3crv: Contract;
   mis2Usdt: Contract;
+  mis3Usdt: Contract;
 
   curvDepositor: Contract;
 
@@ -58,6 +60,7 @@ export class BasisCash {
 
     this.MIC2 = new ERC20(deployments.MIC2.address, provider, 'MIC2');
     this.MIS2 = new ERC20(deployments.MIS2.address, provider, 'MIS2');
+    this.MIS3 = new ERC20(deployments.MIS3.address, provider, 'MIS3');
 
     // SushiSwap Pair
     this.bacDai = new Contract(
@@ -75,8 +78,13 @@ export class BasisCash {
       IUniswapV2PairABI,
       provider,
     )
+    this.mis3Usdt = new Contract(
+      externalTokens['MIS3_USDT-SUSHI-LPv2'][0],
+      IUniswapV2PairABI,
+      provider,
+    )
     this.mic3crv = new Contract(
-      externalTokens['MICv2_3CRV'][0],
+      externalTokens['MICv23CRV'][0],
       curvPoolABI,
       provider,
     )
@@ -103,7 +111,7 @@ export class BasisCash {
     for (const [name, contract] of Object.entries(this.contracts)) {
       this.contracts[name] = contract.connect(this.signer);
     }
-    const tokens = [this.BAC, this.BAS, this.BAB, this.MIC2, this.MIS2, this.USDT, ...Object.values(this.externalTokens)];
+    const tokens = [this.BAC, this.BAS, this.BAB, this.MIC2, this.MIS2, this.MIS3, this.USDT, ...Object.values(this.externalTokens)];
     for (const token of tokens) {
       token.connect(this.signer);
     }
@@ -206,7 +214,7 @@ export class BasisCash {
       .sub(USDTMICStakePoolRemain)
       .sub(USDTMISStakePoolRemain);
 
-    const boardroomBalance = await this.BAS.balanceOf(this.contracts.Boardroom1.address);
+    const boardroomBalance = await this.BAS.balanceOf(this.contracts.Boardroom3.address);
     const USDTMISPoolBalance = await this.BAS.balanceOf(this.basDai.address);
     const unstakedBalance = circulatingSupply.sub(boardroomBalance).sub(USDTMISPoolBalance);
 
@@ -237,8 +245,8 @@ export class BasisCash {
 
   async getShareStat(): Promise<TokenStat> {
     return {
-      priceInUSDT: await this.getTokenPriceFromSushiSwap(this.MIS2),
-      totalSupply: await this.MIS2.displayedTotalSupply(),
+      priceInUSDT: await this.getTokenPriceFromSushiSwap(this.MIS3),
+      totalSupply: await this.MIS3.displayedTotalSupply(),
     };
   }
 
@@ -424,7 +432,7 @@ export class BasisCash {
   }
 
   boardroomByVersion(version: string): Contract {
-    return this.contracts.Boardroom1;
+    return this.contracts.Boardroom3;
   }
 
   currentBoardroom(): Contract {
@@ -454,10 +462,16 @@ export class BasisCash {
     return await Boardroom.balanceOf(this.myAccount);
   }
 
-  async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {
+  async pendingWithdrawalTime(): Promise<number> {
     const Boardroom = this.currentBoardroom();
-    const epoch = await Boardroom.getCheckpointEpoch();
-    return await Boardroom.getEpochUserBalance(this.myAccount, epoch);
+    return await Boardroom.pendingWithdrawalTime(this.myAccount);
+  }
+  
+  async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {
+    return null;
+    // const Boardroom = this.currentBoardroom();
+    // const epoch = await Boardroom.getCheckpointEpoch();
+    // return await Boardroom.getEpochUserBalance(this.myAccount, epoch);
   }
 
   async getEarningsOnBoardroom(): Promise<BigNumber> {
@@ -466,8 +480,19 @@ export class BasisCash {
   }
 
   async getEpochEarningsOnBoardroom(epoch: number): Promise<BigNumber> {
+    return null;
+    // const Boardroom = this.currentBoardroom();
+    // return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+  }
+ 
+  async initiateRewardClaim(): Promise<TransactionResponse> {
     const Boardroom = this.currentBoardroom();
-    return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+    return await Boardroom.initiateRewardClaim();
+  }
+
+  async getPendingEarningsOnBoardroom(): Promise<TransactionResponse> {
+    const Boardroom = this.currentBoardroom();
+    return await Boardroom.initiateRewardClaim();
   }
 
   async withdrawShareFromBoardroom(amount: string): Promise<TransactionResponse> {
@@ -477,14 +502,14 @@ export class BasisCash {
 
   async harvestCashFromBoardroom(): Promise<TransactionResponse> {
     const Boardroom = this.currentBoardroom();
-    const earned = await Boardroom.earned(this.myAccount);
-    return await Boardroom.claimReward(earned);
+    // const earned = await Boardroom.earned(this.myAccount);
+    return await Boardroom.claimReward();
   }
 
   async harvestEpochCashFromBoardroom(epoch: number): Promise<TransactionResponse> {
-    const Boardroom = this.currentBoardroom();
-    const earned = await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
-    return await Boardroom.claimRewardsForEpoch(earned);
+    // const Boardroom = this.currentBoardroom();
+    // const earned = await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
+    return null;
   }
 
   async exitFromBoardroom(): Promise<TransactionResponse> {
@@ -509,17 +534,17 @@ export class BasisCash {
     return await MicV1Migrate.exchangeCash(balance, this.gasOptions(gas));
   }
 
-  async migrateMisV1ToV2() {
-    const MisV1Migrate = this.contracts['MISV1Migrate'];
-    const balance = await this.BAS.balanceOf(this.myAccount);
-    const gas = await MisV1Migrate.estimateGas.exchangeShares(balance);
-    return await MisV1Migrate.exchangeShares(balance, this.gasOptions(gas));
+  async migrateMisV2ToV3() {
+    const MisV2Migrate = this.contracts['MISV2Migrate'];
+    const balance = await this.MIS2.balanceOf(this.myAccount);
+    const gas = await MisV2Migrate.estimateGas.exchangeShares(balance);
+    return await MisV2Migrate.exchangeShares(balance, this.gasOptions(gas));
   }
 
-  async migrateMisUsdtV1ToV2() {
-    const MisUsdtV1Migrate = this.contracts['MISUSDTV1Migrate'];
-    const gas = await MisUsdtV1Migrate.estimateGas.migrateShareLP();
-    return await MisUsdtV1Migrate.migrateShareLP(this.gasOptions(gas));
+  async migrateMisUsdtV2ToV3() {
+    const MisUsdtV2Migrate = this.contracts['MISUSDTV2Migrate'];
+    const gas = await MisUsdtV2Migrate.estimateGas.migrateShareLP();
+    return await MisUsdtV2Migrate.migrateShareLP(this.gasOptions(gas));
   }
 
   async migrateMicUsdtV1ToV2(lock: boolean = false) {

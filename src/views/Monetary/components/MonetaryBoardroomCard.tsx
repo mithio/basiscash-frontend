@@ -16,6 +16,8 @@ import { getDisplayBalance } from '../../../utils/formatBalance';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
 import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardroom';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
+import useInitiateRewardClaimFromBoardroom from '../../../hooks/useInitiateRewardClaimFromBoardroom';
+import usePendingWithdrawalTime from '../../../hooks/usePendingWithdrawalTime';
 import useEarnings from '../../../hooks/useEarnings';
 import useModal from '../../../hooks/useModal';
 import useTokenBalance from '../../../hooks/useTokenBalance';
@@ -32,6 +34,10 @@ import useStakedEffectiveBalanceOnBoardroom from '../../../hooks/useStakedEffect
 const MonetaryBoardroomCard: React.FC = () => {
   const { color } = useContext(ThemeContext);
   const { onReward } = useHarvestFromBoardroom();
+  const { initiateRewardClaim } = useInitiateRewardClaimFromBoardroom();
+  const pendingWithdrawalTime = usePendingWithdrawalTime();
+  var date = new Date(pendingWithdrawalTime * 1000);
+  var formattedTime = date.toLocaleString("en-US");
 
   const basisCash = useBasisCash();
   const tokenBalance = useTokenBalance(basisCash.MIS2);
@@ -41,7 +47,7 @@ const MonetaryBoardroomCard: React.FC = () => {
 
   const boardroomVersion = useBoardroomVersion();
   const [approveStatus, approve] = useApprove(
-    basisCash.MIS2,
+    basisCash.MIS3,
     basisCash.boardroomByVersion(boardroomVersion).address,
   );
 
@@ -62,7 +68,7 @@ const MonetaryBoardroomCard: React.FC = () => {
         onStake(value);
         onDismissDeposit();
       }}
-      tokenName={'MIS2'}
+      tokenName={'MIS3'}
     />,
   );
 
@@ -73,7 +79,7 @@ const MonetaryBoardroomCard: React.FC = () => {
         onWithdraw(value);
         onDismissWithdraw();
       }}
-      tokenName={'MIS2'}
+      tokenName={'MIS3'}
     />,
   );
 
@@ -89,11 +95,11 @@ const MonetaryBoardroomCard: React.FC = () => {
         title='Staked Balance'
         value={
           stakedBalance
-            ? `${getDisplayBalance(stakedBalance)} MIS2`
+            ? `${getDisplayBalance(stakedBalance)} MIS3`
             : '-'
         }
         children={approveStatus !== ApprovalState.APPROVED ? (
-          <MonetaryCardButton text='Approve MIS2' onClick={approve} />
+          <MonetaryCardButton text='Approve MIS3' onClick={approve} />
         ) : (
             <>
               <MonetaryCardButton text='+' size='sm' onClick={onPresentDeposit} />
@@ -102,15 +108,37 @@ const MonetaryBoardroomCard: React.FC = () => {
             </>
           )}
       />
-      <MonetaryCardEffectiveBalance
+      {/* <MonetaryCardEffectiveBalance
         title='Effective Balance (for Epoch)'
         value={
           stakedEffectiveBalance
             ? `${getDisplayBalance(stakedEffectiveBalance)} MIS2`
             : '-'
         }
+      /> */}
+      <MonetaryCardFoot>
+        <MonetaryCardFootCell
+          title='You can claim your rewards after 5 days since the claim started'
+          value={''}
+          button={<MonetaryClaimAllButton text='Initiate Rewards Claim' onClick={initiateRewardClaim} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+        />
+      </MonetaryCardFoot>
+      <MonetaryCardEffectiveBalance
+        title='When you can withdraw'
+        value={ pendingWithdrawalTime ? formattedTime : '-'}
       />
       <MonetaryCardFoot>
+        <MonetaryCardFootCell
+          title='Your Total Pending Rewards'
+          value={
+            earnedMIC
+              ? `${getDisplayBalance(earnedMIC)} MIC2`
+              : '-'
+          }
+          button={<MonetaryClaimAllButton text='Claim Pending Rewards' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+        />
+      </MonetaryCardFoot>
+      {/* <MonetaryCardFoot>
         <MonetaryCardFootCell
           title='Your Total MIC2 Rewards'
           value={
@@ -120,15 +148,15 @@ const MonetaryBoardroomCard: React.FC = () => {
           }
           button={<MonetaryClaimAllButton text='Claim all MIC (subject to fee if within fee period)' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
-      </MonetaryCardFoot>
-      <StyledRow>
+      </MonetaryCardFoot> */}
+      {/* <StyledRow>
         <MonetaryStakeCard day={'Day 1'} fee={'(50% fee)'} epoch={0} />
         <MonetaryStakeCard day={'Day 2'} fee={'(40% fee)'} epoch={1} />
         <MonetaryStakeCard day={'Day 3'} fee={'(30% fee)'} epoch={2} />
         <MonetaryStakeCard day={'Day 4'} fee={'(20% fee)'} epoch={3} />
         <MonetaryStakeCard day={'Day 5'} fee={'(10% fee)'} epoch={4} />
         <MonetaryStakeCard day={'>Day 5'} fee={'(0% fee)'} epoch={5} />
-      </StyledRow>
+      </StyledRow> */}
     </Wrapper>
   )
 };
