@@ -95,7 +95,7 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
   //   sort: 2,
   // },
   MISLPTokenSharePool3: {
-    name: 'MIS3-USDT Pool 3',
+    name: 'MIS3-USDT Pool',
     contract: 'MISLPTokenSharePool3',
     depositTokenName: 'MIS3_USDT-SUSHI-LPv2',
     earnTokenName: 'MIS',
