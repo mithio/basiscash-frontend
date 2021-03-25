@@ -40,7 +40,7 @@ const MonetaryBoardroomCard: React.FC = () => {
   var formattedTime = date.toLocaleString("en-US");
 
   const basisCash = useBasisCash();
-  const tokenBalance = useTokenBalance(basisCash.MIS2);
+  const tokenBalance = useTokenBalance(basisCash.MIS3);
   const stakedBalance = useStakedBalanceOnBoardroom();
   const stakedEffectiveBalance = useStakedEffectiveBalanceOnBoardroom();
   const earnedMIC = useEarningsOnBoardroom();
