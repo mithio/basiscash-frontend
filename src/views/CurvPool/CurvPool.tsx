@@ -11,8 +11,6 @@ import useApprove, { ApprovalState } from '../../hooks/useApprove';
 import { useWallet } from 'use-wallet';
 import useCurvDeposit from '../../hooks/useCurvDeposit';
 
-const CurvDepositor = '0xA79828DF1850E8a3A3064576f380D90aECDD3359';
-
 const CurvPool: React.FC = () => {
   const { account } = useWallet();
 
@@ -90,7 +88,7 @@ const CurvPool: React.FC = () => {
           <ButtonWrapper>
             <Button text='Add Liquidity' disabled={!depositReady} onClick={() => onDeposit(mic2Val, usdtVal)} />
           </ButtonWrapper>
-          <Link href="https://crv.finance/liquidity">Remove Liquidity on crv.finance</Link>
+          <Link href="https://crv.finance/liquidity" target={"_blank"} rel={"noopener noreferrer"}>Remove Liquidity on crv.finance</Link>
         </Card>
       ) : (
         <UnlockWallet />

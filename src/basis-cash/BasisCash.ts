@@ -466,7 +466,7 @@ export class BasisCash {
     const Boardroom = this.currentBoardroom();
     return await Boardroom.pendingWithdrawalTime(this.myAccount);
   }
-  
+
   async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {
     return null;
     // const Boardroom = this.currentBoardroom();
@@ -484,7 +484,7 @@ export class BasisCash {
     // const Boardroom = this.currentBoardroom();
     // return await Boardroom.calculateClaimableRewardsForEpoch(this.myAccount, epoch);
   }
- 
+
   async initiateRewardClaim(): Promise<TransactionResponse> {
     const Boardroom = this.currentBoardroom();
     return await Boardroom.initiateRewardClaim();
@@ -573,14 +573,12 @@ export class BasisCash {
   }
 
   async depositCurvPool(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> {
-    const fn = 'add_liquidity(address,uint256[4],uint256)';
+    const fn = 'add_liquidity(uint256[4],uint256)';
     const gas = await this.curvDepositor.estimateGas[fn](
-      '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e',
       [mic2Amount, '0', '0', usdtAmount],
       '1',
     );
     return await this.curvDepositor[fn](
-      '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e',
       [mic2Amount, '0', '0', usdtAmount],
       '1',
       this.gasOptions(gas),

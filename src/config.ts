@@ -37,7 +37,7 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 3000,
     gasLimitMultiplier: 1.1,
-    curvDepositor: '0xA79828DF1850E8a3A3064576f380D90aECDD3359',
+    curvDepositor: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
   },
   production: {
     chainId: ChainId.MAINNET,
@@ -73,7 +73,7 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 30000,
     gasLimitMultiplier: 1.7,
-    curvDepositor: '0xA79828DF1850E8a3A3064576f380D90aECDD3359',
+    curvDepositor: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
   },
 };
 
