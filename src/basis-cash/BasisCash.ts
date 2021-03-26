@@ -573,7 +573,7 @@ export class BasisCash {
   }
 
   async depositCurvPool(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> {
-    const fn = 'add_liquidity(address,uint256[4],uint256)';
+    const fn = 'add_liquidity(uint256[4],uint256)';
     const gas = await this.curvDepositor.estimateGas[fn](
       [mic2Amount, '0', '0', usdtAmount],
       '1',
