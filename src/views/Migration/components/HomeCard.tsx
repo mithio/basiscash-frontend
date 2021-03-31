@@ -11,6 +11,7 @@ import useMigrationEndTime from '../../../hooks/useMigrationEndTime';
 import useTokenBalance from '../../../hooks/useTokenBalance';
 import ERC20 from '../../../basis-cash/ERC20';
 import { getDisplayBalance } from '../../../utils/formatBalance';
+import useStakedBalance from 'c:/Users/Josh/Desktop/mith/basiscash-frontend-new/src/hooks/useStakedBalance';
 
 interface HomeCardProps {
   title: string;
@@ -32,14 +33,13 @@ export const HomeCard: React.FC<HomeCardProps> = ({
   to,
 }) => {
   const endTime = useMigrationEndTime(contractName);
-
   const v1Balance = useTokenBalance(from);
   const v2Balance = useTokenBalance(to);
 
   return (
     <Wrapper>
       <CardHeader color={headerColor}>{title}</CardHeader>
-      <CardHeader color={headerColor}>V2 to V3</CardHeader>
+      <CardHeader color={headerColor}>LP V1 to LP V2</CardHeader>
       <StyledCards>
         <CardBody backgroundImg={backgroundImg}>
           <CardContent>
@@ -47,12 +47,12 @@ export const HomeCard: React.FC<HomeCardProps> = ({
             &nbsp;
             &nbsp;
             <CardSection>
-              <StyledV1Label>V2:</StyledV1Label>
+              <StyledV1Label>Curve V1:</StyledV1Label>
               <StyledV1Value>{getDisplayBalance(v1Balance, 18, 6)}</StyledV1Value>
             </CardSection>
             <SwapButton>{button}</SwapButton>
             <CardSection>
-              <StyledV2Label>V3:</StyledV2Label>
+              <StyledV2Label>Curve V2:</StyledV2Label>
               <StyledV2Value>{getDisplayBalance(v2Balance, 18, 6)}</StyledV2Value>
             </CardSection>
           </CardContent>
