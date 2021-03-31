@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 
 import { Bank } from '../../basis-cash';
@@ -7,6 +7,7 @@ import useShareStats from '../../hooks/useShareStats';
 import { TokenStat } from '../../basis-cash/types';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useEarnings from '../../hooks/useEarnings';
+import useEarningsMIC2 from '../../hooks/useEarningsMIC2';
 import useHarvest from '../../hooks/useHarvest';
 import useStakedBalance from '../../hooks/useStakedBalance';
 import useModal from '../../hooks/useModal';
@@ -16,32 +17,34 @@ import useTokenBalance from '../../hooks/useTokenBalance';
 import useStake from '../../hooks/useStake';
 import useWithdraw from '../../hooks/useWithdraw';
 import useApprove, { ApprovalState } from '../../hooks/useApprove';
-import lock from '../../assets/img/lock.png';
-import unlock from '../../assets/img/unlock.png';
 import gift from '../../assets/img/gift.png';
-import MIC_green from '../../assets/img/MIC_green.png';
+import mis from '../../assets/img/mis-logo.svg';
+import useBasisCash from '../../hooks/useBasisCash';
+import lock from '../../assets/img/lock.png';
 
-interface MICCardProps {
+interface LockedCardProps {
   bank: Bank;
 }
 
-const MICCard: React.FC<MICCardProps> = ({ bank }) => {
+const LockedCard: React.FC<LockedCardProps> = ({ bank }) => {
   const [approveStatus, approve] = useApprove(bank.depositToken, bank.address);
-
-  const earnings = useEarnings(bank.contract);
+  const basisCash = useBasisCash();
+  const earnings = useEarningsMIC2(bank.contract);
   const { onReward } = useHarvest(bank);
 
   const cashStats = useCashStats();
   const shareStats = useShareStats();
 
+  const MIC2rewards = useEarnings('MIC23CRVLockPool');
+  const realMIC = getDisplayBalance(earnings);
+  const realMIC1 = parseInt(realMIC) / 10;
+  
+
   const tokenBalance = useTokenBalance(bank.depositToken);
   const stakedBalance = useStakedBalance(bank.contract);
-  const stakedLockedBalance = useStakedBalance('MIC23CRVLockPool');
 
   const { onStake } = useStake(bank);
   const { onWithdraw } = useWithdraw(bank);
-
-  const [ isDetailsShow, setDetailsShow ] = useState(false);
 
   const [onPresentDeposit, onDismissDeposit] = useModal(
     <DepositModal
@@ -73,26 +76,27 @@ const MICCard: React.FC<MICCardProps> = ({ bank }) => {
   if (bank.depositTokenName.includes('MIS')) {
     currency = 'MIS';
     currencyStats = shareStats;
-    purchaseLink = "https://app.sushi.com/pair/0xf9fF921E63B525A73dD3cF57463da53138358A49";
+    purchaseLink = 'https://app.sushi.com/pair/0x097b21e4784c2b224fd8b880939f75b2e9f4dba5';
   } else if (bank.depositTokenName.includes('MIC')) {
     currency = 'MIC';
     currencyStats = cashStats;
-    purchaseLink = "https://crv.finance/swap";
+    purchaseLink = 'https://crv.finance/swap';
   }
 
   return (
     <StyledWrapper>
       <StyledContent>
-        <StyledType>Curve Stableswap</StyledType>
+        <StyledType>Locked Liquidity</StyledType>
         <StyledTitle>{bank.name}</StyledTitle>
-        <StyledSubtitle>Earn {bank.earnTokenName}</StyledSubtitle>
+        <StyledSubtitle>Claim your {bank.earnTokenName}</StyledSubtitle>
+        <StyledSubtitle>Note: Clicking Exit will claim your rewards, and exit the pool.</StyledSubtitle>
         <StyledReward>
-          <StyledRewardValue>{getDisplayBalance(earnings)}</StyledRewardValue>
+          <StyledRewardValue>{realMIC1}</StyledRewardValue>
           &nbsp;
           <StyledRewardToken>{bank.earnTokenName}</StyledRewardToken>
         </StyledReward>
-        <CardButton text="Claim MIS" onClick={onReward} disabled={earnings.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />
-      </StyledContent>
+          <CardButton text="Claim MIC" onClick={onReward} disabled={earnings.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />
+        </StyledContent>
       <StyledFoot>
         <StyledLeftFoot>
           <StyledFootTitle>Current {currency} Price</StyledFootTitle>
@@ -102,63 +106,22 @@ const MICCard: React.FC<MICCardProps> = ({ bank }) => {
             ) : (
                 `-`
               )}</StyledFootValue>
-          <CardButton text={`Buy ${currency} with USDT`} to={purchaseLink} width='auto' icon={MIC_green} backgroundColor="#4D6756" colorHover="#A1C7AE" backgroundColorHover="#4D6756" color="#A1C7AE" />
+          <CardButton text={`Buy ${currency} with USDT`} to={purchaseLink} icon={mis} backgroundColor="#426687" colorHover="#8DB5DA" backgroundColorHover="#426687" color="#8DB5DA" />
         </StyledLeftFoot>
         <StyledRightFoot>
-          <StyledFootTitle>Your Staked LP Balance</StyledFootTitle>
+          <StyledFootTitle><HeaderImg src={lock} />Your staked LP Balance</StyledFootTitle>
+          <StyledFootTitle>Once exited, click  <a href="https://mith.cash/migration">here</a>  to migrate your LP to the V2 Curve Pool</StyledFootTitle>
           <StyledFootValue>{getDisplayBalance(stakedBalance, bank.depositToken.decimal, 6)}</StyledFootValue>
           <StyledButtonGroup>
-              {approveStatus !== ApprovalState.APPROVED ? (
-                <CardButton
-                  size='sm'
-                  disabled={
-                    approveStatus === ApprovalState.PENDING ||
-                    approveStatus === ApprovalState.UNKNOWN
-                  }
-                  onClick={approve}
-                  text={`Approve ${bank.depositTokenName}`}
-                />
-              ) : (
+            
                 <>
-                  <CardButton size='sm' text='Deposit' onClick={onPresentDeposit} disabled={tokenBalance.eq(0)} />
-                  <CardButton size='sm' text='Withdraw' onClick={onPresentWithdraw} disabled={stakedBalance.eq(0)} />
+                  
+                  <CardButton size='sm' text='Exit' onClick={() => {basisCash.exitlockedpool()}} disabled={stakedBalance.eq(0)} />
                 </>
-              )}
-            </StyledButtonGroup>
-          {/* <CardButton text={!isDetailsShow ? `More Details` : `Less Details`} onClick={() => setDetailsShow(!isDetailsShow)} /> */}
+            
+          </StyledButtonGroup>
         </StyledRightFoot>
       </StyledFoot>
-      {/* {isDetailsShow && ( */}
-        {/* <StyledFoot> */}
-          {/* <StyledLeftFoot> */}
-            {/* <StyledFootTitle><HeaderImg src={lock} />Your Staked LP Balance</StyledFootTitle> */}
-            {/* <StyledFootValue>{getDisplayBalance(stakedLockedBalance, bank.depositToken.decimal, 6)}</StyledFootValue> */}
-            {/*<CardButton text={`00:00:00`} disabled />*/}
-          {/* </StyledLeftFoot> */}
-          {/* <StyledRightFoot> */}
-            {/* <StyledFootTitle><HeaderImg src={unlock} />Your Staked LP Balance</StyledFootTitle> */}
-            {/* <StyledFootValue>{getDisplayBalance(stakedBalance, bank.depositToken.decimal, 6)}</StyledFootValue> */}
-            {/* <StyledButtonGroup> */}
-              {/* {approveStatus !== ApprovalState.APPROVED ? ( */}
-                {/* <CardButton */}
-                  {/* size='sm' */}
-                  {/*  disabled={ */}
-                    {/* approveStatus === ApprovalState.PENDING || */}
-                    {/* approveStatus === ApprovalState.UNKNOWN */}
-                  {/* } */}
-                  {/* onClick={approve} */}
-                  {/* text={`Approve ${bank.depositTokenName}`} */}
-                {/* /> */}
-              {/* ) : ( */}
-                <>
-                  {/* <CardButton size='sm' text='Deposit' onClick={onPresentDeposit} disabled={tokenBalance.eq(0)} /> */}
-                  {/* <CardButton size='sm' text='Withdraw' onClick={onPresentWithdraw} disabled={stakedBalance.eq(0)} /> */}
-                </>
-              {/* )} */}
-            {/* </StyledButtonGroup> */}
-          {/* </StyledRightFoot> */}
-        {/* </StyledFoot> */}
-      
     </StyledWrapper>
   )
 }
@@ -179,7 +142,6 @@ const StyledWrapper = styled.div`
   box-shadow: 0px 0px 20px rgba(77, 103, 86, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   flex: 1;
-  margin-right: 37px;
 `
 
 const StyledReward = styled.div`
@@ -203,8 +165,9 @@ const StyledRewardToken = styled.div`
 `
 
 const StyledType = styled.h4`
+  border: 1px solid ${'#e67519'};
   border-radius: 20px;
-  color: ${'#A1C7AE'};
+  color: ${'#8DB5DA'};
   margin: ${(props) => props.theme.spacing[2]}px 0 0;
   position: absolute;
   left: 10px;
@@ -212,19 +175,18 @@ const StyledType = styled.h4`
   padding: 7px 12px;
   font-size: 14px;
   background: #26272D;
-  border: 1px solid #4D6756;
+  border: 1px solid #426687;
   box-sizing: border-box;
-  box-shadow: 0px 0px 20px rgba(77, 103, 86, 0.25), 0px 10px 20px rgba(0, 0, 0, 0.1);
+  filter: drop-shadow(0px 0px 20px rgba(77, 103, 86, 0.25)), drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.1));
   border-radius: 20px;
 `;
 
 const StyledTitle = styled.h4`
-  color: ${'#A1C7AE'};
+  color: ${'#8DB5DA'};
   font-size: 22px;
   font-weight: 700;
   text-align: center;
   margin: ${(props) => props.theme.spacing[2]}px 0 0;
-  // padding-left: 70px;
 `;
 
 const StyledSubtitle = styled.div`
@@ -243,23 +205,12 @@ const StyledContent = styled.div`
   flex: 1;
   justify-content: space-between;
   padding: ${props => props.theme.spacing[4]}px;
+  border-bottom: ${props => props.theme.color.grey[800]} 1px solid;
   position: relative;
 `;
 
-const StyledStat = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: ${props => props.theme.color.grey[800]} 1px solid;
-  padding: ${props => props.theme.spacing[4]}px;
-`
-
 const StyledFoot = styled.div`
   display: flex;
-  border-top: ${props => props.theme.color.grey[800]} 1px solid;
 `;
 
 const StyledFootTitle = styled.div`
@@ -396,4 +347,4 @@ const Button = styled.button<ButtonProps>`
   }
 `
 
-export default MICCard;
+export default LockedCard;

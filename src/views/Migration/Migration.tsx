@@ -22,6 +22,24 @@ import useApprove, { ApprovalState } from '../../hooks/useApprove';
 import { useWallet } from 'use-wallet';
 import { Switch } from 'react-router-dom';
 import Button from '../../components/Button';
+import BasisCash from '../../basis-cash';
+import { Bank } from '../../basis-cash';
+import useCashStats from '../../hooks/useCashStats';
+import useShareStats from '../../hooks/useShareStats';
+import { TokenStat } from '../../basis-cash/types';
+import { getDisplayBalance } from '../../utils/formatBalance';
+import useEarnings from '../../hooks/useEarnings';
+import useHarvest from '../../hooks/useHarvest';
+import useStakedBalance from '../../hooks/useStakedBalance';
+import useModal from '../../hooks/useModal';
+import DepositModal from '../Bank/components/DepositModal';
+import WithdrawModal from '../Bank/components/WithdrawModal';
+import useTokenBalance from '../../hooks/useTokenBalance';
+import useStake from '../../hooks/useStake';
+import useWithdraw from '../../hooks/useWithdraw';
+import MIC_green from '../../assets/img/MIC_green.png';
+
+
 
 const Migration: React.FC = () => {
   const { onReward } = useHarvestFromBoardroom();
@@ -42,10 +60,19 @@ const Migration: React.FC = () => {
   const nextEpoch = useMemo(() => moment(prevEpoch).add(6, 'hours').toDate(), [prevEpoch]);
   const basisCash = useBasisCash();
 
+
+
+
+  
+
   // const [micApproveStatus, micApprove] = useApprove(basisCash.BAC, basisCash.contracts['MICV1Migrate'].address);
   const [misApproveStatus, misApprove] = useApprove(basisCash.MIS2, basisCash.contracts['MISV2Migrate'].address);
   const [micUsdtApproveStatus, micUsdtApprove] = useApprove(basisCash.externalTokens['MICv2_3CRV'], basisCash.contracts['MICUSDTV1Migrate'].address);
   const [misUsdtApproveStatus, misUsdtApprove] = useApprove(basisCash.externalTokens['MIS2_USDT-SUSHI-LPv2'], basisCash.contracts['MISUSDTV2Migrate'].address);
+  const [v1CurvetoV2CurveApproveStatus, v1tov2Approve] = useApprove(basisCash.externalTokens['MICv2_3CRV'], basisCash.contracts['CurveLPMigrator'].address);
+  const [approvelockedpool, lockedpoolApprove] = useApprove(basisCash.externalTokens['MICv2_3CRV'], basisCash.contracts['MIC23CRVLockPool'].address);
+
+  const stakedLockedBalance = useStakedBalance('MIC23CRVLockPool');
 
   return !account ? (
     <Page>
@@ -69,7 +96,8 @@ const Migration: React.FC = () => {
           from={basisCash.BAC}
           to={basisCash.MIC2}
         />
-        <Spacer size="lg" /> */}
+        <Spacer size="lg" /> 
+        
         <HomeCard
           title="MITH Shares (MIS)"
           backgroundImg={misCardBorder}
@@ -83,7 +111,8 @@ const Migration: React.FC = () => {
           from={basisCash.MIS2}
           to={basisCash.MIS3}
         />
-        <Spacer size="lg" />
+        <Spacer size="lg" /> 
+
         <HomeCard
           title="MIS-USDT LP"
           backgroundImg={misCardBorder}
@@ -98,8 +127,56 @@ const Migration: React.FC = () => {
           to={basisCash.externalTokens['MIS3_USDT-SUSHI-LPv2']}
         />
         <Spacer size="lg" />
-      </CardWrapper>
-      {/* <CardWrapper>
+        
+
+<HomeCard
+          title="Locked LP rewards"
+          backgroundImg={micCardBorder}
+          headerColor="#426687"
+          button={approvelockedpool === ApprovalState.APPROVED ? (
+            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.claimLockedRewards()}} />
+          ) : (
+            <MigrationButton text='APPROVE' disabled={false} onClick={lockedpoolApprove} />
+          )}
+          contractName="MIC23CRVLockPool"
+          from= {'MIC23CRVLockPool'}
+          to={basisCash.externalTokens['MICv23CRV']}
+        />
+        <Spacer size="lg" />
+
+
+        */
+        
+        
+        
+        
+        }
+        
+        
+        
+   
+
+        
+
+      <HomeCard
+          title="MITH Cash LP Migrator"
+          backgroundImg={micCardBorder}
+          headerColor="#4D6756"
+          button={v1CurvetoV2CurveApproveStatus === ApprovalState.APPROVED ? (
+            <MigrationButton text='SWAP' disabled={false} onClick={() => {basisCash.migratecv1tocv2()}} />
+          ) : (
+            <MigrationButton text='APPROVE' disabled={false} onClick={v1tov2Approve} />
+          )}
+          contractName="CurveLPMigrator"
+          from={basisCash.externalTokens['MICv2_3CRV']}
+          to={basisCash.externalTokens['MICv23CRV']}
+        />
+        <Spacer size="lg" />
+        </CardWrapper> 
+
+          
+      
+      {/*<CardWrapper>
         <ShowCards onClick={() => {}}>
           {micUsdtApproveStatus === ApprovalState.APPROVED ? (
             <HomeCard2
@@ -117,7 +194,8 @@ const Migration: React.FC = () => {
               clickEvent={isMigrationCardShow}
               contractName="MICUSDTV1Migrate"
               from={basisCash.externalTokens['MICv2_3CRV']}
-              to={basisCash.externalTokens['MICv23CRV']}
+              to={basisCash.MIS3}
+              //to={basisCash.externalTokens['MICv23CRV']}
             />
           ) : (
             <HomeCard
@@ -131,7 +209,7 @@ const Migration: React.FC = () => {
             />
           )}
         </ShowCards>
-      </CardWrapper> */}
+          </CardWrapper> */}
 
       {/*{isMigrationCardShow && (*/}
       {/*  <StyledRow>*/}

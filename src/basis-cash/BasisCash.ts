@@ -1,7 +1,7 @@
 import { Fetcher, Route, Token } from '@sushiswap/sdk';
 import { Configuration } from './config';
 import { ContractName, ShareMetric, SushiSwapPoolMISRemain, TokenStat, TreasuryAllocationTime } from './types';
-import { BigNumber, Contract, ethers, Overrides } from 'ethers';
+import { BigNumber, Contract, ContractInterface, ethers, Overrides } from 'ethers';
 import { decimalToBalance } from './ether-utils';
 import { TransactionResponse } from '@ethersproject/providers';
 import ERC20 from './ERC20';
@@ -10,6 +10,7 @@ import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
 import curvDepositorABI from './curvDepositor.json';
+import lockedStake from './lockedStake.json';
 
 /**
  * An API module of Basis Cash contracts.
@@ -37,6 +38,9 @@ export class BasisCash {
   mic3crv: Contract;
   mis2Usdt: Contract;
   mis3Usdt: Contract;
+  mic23crv: Contract;
+ // lockedContract: Contract;
+
 
   curvDepositor: Contract;
 
@@ -61,6 +65,7 @@ export class BasisCash {
     this.MIC2 = new ERC20(deployments.MIC2.address, provider, 'MIC2');
     this.MIS2 = new ERC20(deployments.MIS2.address, provider, 'MIS2');
     this.MIS3 = new ERC20(deployments.MIS3.address, provider, 'MIS3');
+    
 
     // SushiSwap Pair
     this.bacDai = new Contract(
@@ -88,6 +93,20 @@ export class BasisCash {
       curvPoolABI,
       provider,
     )
+
+    this.mic23crv = new Contract(
+     externalTokens['MICv2_3CRV'][0],
+     curvPoolABI,
+     provider,
+
+  )
+
+    //this.lockedContract = new Contract (
+     //externalTokens['MIC23CRVLockPool'][0],
+     //lockedStake,
+     //provider,
+
+    //)
 
     this.curvDepositor = new Contract(
       cfg.curvDepositor,
@@ -302,6 +321,19 @@ export class BasisCash {
       return BigNumber.from(0);
     }
   }
+
+  async MIC2earned(poolName: ContractName, account = this.myAccount): Promise<BigNumber> {
+    const pool = this.contracts[poolName];
+    try {
+      return await pool.rewards(account);
+    } catch (err) {
+      console.error(`Failed to call earned() on pool ${pool.address}: ${err.stack}`);
+      return BigNumber.from(0);
+    }
+  }
+
+
+
 
   async stakedBalanceOnBank(
     poolName: ContractName,
@@ -541,6 +573,36 @@ export class BasisCash {
     return await MisV2Migrate.exchangeShares(balance, this.gasOptions(gas));
   }
 
+  async migratecv1tocv2(){
+    const CurveLPMigrator = this.contracts['CurveLPMigrator'];
+    const oldpool = '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e';
+    const newpool = '0x2B26239f52420d11420bC0982571BFE091417A7d';
+    const balace = await this.mic23crv.balanceOf(this.myAccount);
+    const gas = await CurveLPMigrator.estimateGas.gas(); 
+    return await CurveLPMigrator.migrate_to_new_pool(oldpool, newpool, balace, this.gasOptions(gas));
+
+  }
+
+  async exitlockedpool(){
+   const MIC23CRVLockPool = this.contracts['MIC23CRVLockPool'];
+   const gas = await MIC23CRVLockPool.estimateGas.exit();
+   return await MIC23CRVLockPool.exit(this.gasOptions(gas));
+
+  }
+
+  async claimLockedRewards(){
+   const MIC23CRVLockPool = this.contracts['MIC23CRVLockPool'];
+   const gas = await MIC23CRVLockPool.estimateGas.getReward();
+   return await MIC23CRVLockPool.getReward(this.gasOptions(gas));
+  }
+
+  async balanceLockedRewards(){
+    const MIC23CRVLockPool = this.contracts['MIC23CRVLockPool'];
+    return await MIC23CRVLockPool.balanceOf();
+
+
+  }
+
   async migrateMisUsdtV2ToV3() {
     const MisUsdtV2Migrate = this.contracts['MISUSDTV2Migrate'];
     const gas = await MisUsdtV2Migrate.estimateGas.migrateShareLP();
@@ -575,10 +637,12 @@ export class BasisCash {
   async depositCurvPool(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> {
     const fn = 'add_liquidity(address,uint256[4],uint256)';
     const gas = await this.curvDepositor.estimateGas[fn](
+      '0x2B26239f52420d11420bC0982571BFE091417A7d',
       [mic2Amount, '0', '0', usdtAmount],
       '1',
     );
     return await this.curvDepositor[fn](
+      '0x2B26239f52420d11420bC0982571BFE091417A7d',
       [mic2Amount, '0', '0', usdtAmount],
       '1',
       this.gasOptions(gas),
