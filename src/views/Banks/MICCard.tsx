@@ -106,8 +106,21 @@ const MICCard: React.FC<MICCardProps> = ({ bank }) => {
         </StyledLeftFoot>
         <StyledRightFoot>
           <StyledFootTitle>Your Staked LP Balance</StyledFootTitle>
-          <StyledFootValue>{getDisplayBalance(stakedBalance, bank.depositToken.decimal, 6)}</StyledFootValue>
-          <StyledButtonGroup>
+          <StyledFootValue>{getDisplayBalance(stakedLockedBalance.add(stakedBalance), bank.depositToken.decimal, 6)}</StyledFootValue>
+          <CardButton text={!isDetailsShow ? `More Details` : `Less Details`} onClick={() => setDetailsShow(!isDetailsShow)} />
+        </StyledRightFoot>
+      </StyledFoot>
+      {isDetailsShow && (
+        <StyledFoot>
+          <StyledLeftFoot>
+            <StyledFootTitle><HeaderImg src={lock} />Your Staked LP Balance</StyledFootTitle>
+            <StyledFootValue>{getDisplayBalance(stakedLockedBalance, bank.depositToken.decimal, 6)}</StyledFootValue>
+            {/*<CardButton text={`00:00:00`} disabled />*/}
+          </StyledLeftFoot>
+          <StyledRightFoot>
+            <StyledFootTitle><HeaderImg src={unlock} />Your Staked LP Balance</StyledFootTitle>
+            <StyledFootValue>{getDisplayBalance(stakedBalance, bank.depositToken.decimal, 6)}</StyledFootValue>
+            <StyledButtonGroup>
               {approveStatus !== ApprovalState.APPROVED ? (
                 <CardButton
                   size='sm'
@@ -125,40 +138,9 @@ const MICCard: React.FC<MICCardProps> = ({ bank }) => {
                 </>
               )}
             </StyledButtonGroup>
-          {/* <CardButton text={!isDetailsShow ? `More Details` : `Less Details`} onClick={() => setDetailsShow(!isDetailsShow)} /> */}
-        </StyledRightFoot>
-      </StyledFoot>
-      {/* {isDetailsShow && ( */}
-        {/* <StyledFoot> */}
-          {/* <StyledLeftFoot> */}
-            {/* <StyledFootTitle><HeaderImg src={lock} />Your Staked LP Balance</StyledFootTitle> */}
-            {/* <StyledFootValue>{getDisplayBalance(stakedLockedBalance, bank.depositToken.decimal, 6)}</StyledFootValue> */}
-            {/*<CardButton text={`00:00:00`} disabled />*/}
-          {/* </StyledLeftFoot> */}
-          {/* <StyledRightFoot> */}
-            {/* <StyledFootTitle><HeaderImg src={unlock} />Your Staked LP Balance</StyledFootTitle> */}
-            {/* <StyledFootValue>{getDisplayBalance(stakedBalance, bank.depositToken.decimal, 6)}</StyledFootValue> */}
-            {/* <StyledButtonGroup> */}
-              {/* {approveStatus !== ApprovalState.APPROVED ? ( */}
-                {/* <CardButton */}
-                  {/* size='sm' */}
-                  {/*  disabled={ */}
-                    {/* approveStatus === ApprovalState.PENDING || */}
-                    {/* approveStatus === ApprovalState.UNKNOWN */}
-                  {/* } */}
-                  {/* onClick={approve} */}
-                  {/* text={`Approve ${bank.depositTokenName}`} */}
-                {/* /> */}
-              {/* ) : ( */}
-                <>
-                  {/* <CardButton size='sm' text='Deposit' onClick={onPresentDeposit} disabled={tokenBalance.eq(0)} /> */}
-                  {/* <CardButton size='sm' text='Withdraw' onClick={onPresentWithdraw} disabled={stakedBalance.eq(0)} /> */}
-                </>
-              {/* )} */}
-            {/* </StyledButtonGroup> */}
-          {/* </StyledRightFoot> */}
-        {/* </StyledFoot> */}
-      
+          </StyledRightFoot>
+        </StyledFoot>
+      )}
     </StyledWrapper>
   )
 }

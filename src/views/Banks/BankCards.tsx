@@ -11,7 +11,6 @@ import TokenSymbol from '../../components/TokenSymbol';
 import Notice from '../../components/Notice';
 import MICCard from './MICCard';
 import MISCard from './MISCard';
-import LockedCard from './LockedCard';
 import Container from '../../components/Container';
 
 const BankCards: React.FC = () => {
@@ -46,23 +45,16 @@ const BankCards: React.FC = () => {
           </Notice>
         </StyledInactiveNoticeContainer>
       )}
-
       <StyledRow>
         {activeBanks.map((bank, i) => (
           <React.Fragment key={bank.name}>
             {bank.earnTokenName === 'MIS' ? 
-            bank.name === 'MIC2-3CRV Pool' ? (<MICCard bank={bank} />) : (<MISCard bank={bank} />) : (<LockedCard bank={bank} />)}
+            bank.name === 'MIC2-3CRV Pool' ? (<MICCard bank={bank} />) : (<MISCard bank={bank} />)
+            : (<BankCard bank={bank} />)}
           </React.Fragment>
         ))}
       </StyledRow>
-
-
-     
-      
-
-
-
-*{inactiveRows[0].length > 0 && (
+      {inactiveRows[0].length > 0 && (
         <>
           <StyledInactiveBankTitle>Inactive Banks</StyledInactiveBankTitle>
           {inactiveRows.map((bankRow, i) => (
@@ -79,7 +71,7 @@ const BankCards: React.FC = () => {
       )}
     </Container>
   );
-}; 
+};
 
 interface BankCardProps {
   bank: Bank;
