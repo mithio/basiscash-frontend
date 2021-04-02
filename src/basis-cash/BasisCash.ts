@@ -325,7 +325,7 @@ export class BasisCash {
   async MIC2earned(poolName: ContractName, account = this.myAccount): Promise<BigNumber> {
     const pool = this.contracts[poolName];
     try {
-      return await pool.rewards(account);
+      return await pool.getRedeemableReward(account);
     } catch (err) {
       console.error(`Failed to call earned() on pool ${pool.address}: ${err.stack}`);
       return BigNumber.from(0);
