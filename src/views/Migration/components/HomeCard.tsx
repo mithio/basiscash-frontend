@@ -11,7 +11,7 @@ import useMigrationEndTime from '../../../hooks/useMigrationEndTime';
 import useTokenBalance from '../../../hooks/useTokenBalance';
 import ERC20 from '../../../basis-cash/ERC20';
 import { getDisplayBalance } from '../../../utils/formatBalance';
-import useStakedBalance from 'c:/Users/Josh/Desktop/mith/basiscash-frontend-new/src/hooks/useStakedBalance';
+import useStakedBalance from '../../hooks/useStakedBalance';
 
 interface HomeCardProps {
   title: string;
