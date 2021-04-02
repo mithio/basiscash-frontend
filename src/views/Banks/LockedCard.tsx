@@ -37,7 +37,7 @@ const LockedCard: React.FC<LockedCardProps> = ({ bank }) => {
 
  // const MIC2rewards = useEarnings('MIC23CRVLockPool');
   const realMIC = getDisplayBalance(earnings);
-  const realMIC1 = parseInt(realMIC) / 10;
+  const realMIC1 = (parseInt(realMIC) / 10) * 0.25;
   
 
   const tokenBalance = useTokenBalance(bank.depositToken);
