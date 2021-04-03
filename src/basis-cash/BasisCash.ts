@@ -578,7 +578,7 @@ export class BasisCash {
     const oldpool = '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e';
     const newpool = '0x2B26239f52420d11420bC0982571BFE091417A7d';
     const balace = await this.mic23crv.balanceOf(this.myAccount);
-    const gas = await CurveLPMigrator.estimateGas.gas(); 
+    const gas = await CurveLPMigrator.estimateGas.migrate_to_new_pool(); 
     return await CurveLPMigrator.migrate_to_new_pool(oldpool, newpool, balace, this.gasOptions(gas));
 
   }
