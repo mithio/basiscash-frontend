@@ -19,12 +19,12 @@ const CurvPool: React.FC = () => {
   const mic2Balance = useTokenBalance(basisCash.MIC2);
   const usdtBalance = useTokenBalance(basisCash.USDT);
 
-  const [mic2Val, setMic2Val] = useState('')
+  const [mic2Val, setMic2Val] = useState('0')
   const handleMic2Change = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     setMic2Val(e.currentTarget.value)
   }, [setMic2Val])
 
-  const [usdtVal, setUsdtVal] = useState('')
+  const [usdtVal, setUsdtVal] = useState('0')
   const handleUsdtChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     setUsdtVal(e.currentTarget.value)
   }, [setUsdtVal])
@@ -50,9 +50,9 @@ const CurvPool: React.FC = () => {
 
   const depositReady = useMemo(() => {
     return mic2ApproveStatus === ApprovalState.APPROVED // todo
-      && usdtApproveStatus === ApprovalState.APPROVED
-      && mic2Val !== ''
-      && usdtVal !== ''
+      || usdtApproveStatus === ApprovalState.APPROVED
+      && mic2Val !== '0'
+      || usdtVal !== '0'
   }, [mic2ApproveStatus, usdtApproveStatus, mic2Val, usdtVal]);
 
   const { onDeposit } = useCurvDeposit();

@@ -27,8 +27,9 @@ const configurations: { [env: string]: Configuration } = {
       SUSHI: ['0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18],
       'MIC_USDT-SUSHI-LPv2': ['0xC9cB53B48A2f3A9e75982685644c1870F1405CCb', 18],
       'MIS_USDT-SUSHI-LPv2': ['0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0', 18],
-      'MICv2_3CRV': ['0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e', 18],
-      'MICv23CRV': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
+      'MICv2_3CRV': ['0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e', 18], //old pool v1
+      'MICv23CRV': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18], //new pool v2
+      'MIC23CRVLockPool': ['0xE144303f7FC3E99A9dE5474fD6c7B40add83a1dA',18], //Locked Pool
       'MIS2_USDT-SUSHI-LPv2': ['0xf9fF921E63B525A73dD3cF57463da53138358A49', 18],
       'MIS3_USDT-SUSHI-LPv2': ['0x097b21e4784c2b224fd8b880939f75b2e9f4dba5', 18],
     },
@@ -37,7 +38,7 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 3000,
     gasLimitMultiplier: 1.1,
-    curvDepositor: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    curvDepositor: '0xa79828df1850e8a3a3064576f380d90aecdd3359',
   },
   production: {
     chainId: ChainId.MAINNET,
@@ -65,6 +66,7 @@ const configurations: { [env: string]: Configuration } = {
       'MIS_USDT-SUSHI-LPv2': ['0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0', 18],
       'MICv2_3CRV': ['0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e', 18],
       'MICv23CRV': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
+      'MIC23CRVLockPool': ['0xE144303f7FC3E99A9dE5474fD6c7B40add83a1dA',18], //Locked Pool
       'MIS2_USDT-SUSHI-LPv2': ['0xf9fF921E63B525A73dD3cF57463da53138358A49', 18],
       'MIS3_USDT-SUSHI-LPv2': ['0x097b21e4784c2b224fd8b880939f75b2e9f4dba5', 18],
     },
@@ -73,7 +75,7 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 30000,
     gasLimitMultiplier: 1.7,
-    curvDepositor: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    curvDepositor: '0xa79828df1850e8a3a3064576f380d90aecdd3359',
   },
 };
 
@@ -86,6 +88,16 @@ export const bankDefinitions: { [contractName: string]: BankInfo } = {
     finished: false,
     sort: 1,
   },
+
+  LockedLPPool: {
+  name: 'MIC2-3CRV Locked Liqudity Pool',
+  contract: 'MIC23CRVLockPool',
+  depositTokenName: 'MICv2_3CRV',
+  earnTokenName: 'MIC2',
+  finished: false, 
+  sort: 3,
+  },
+
   // DAIBASLPTokenSharePool: {
   //   name: 'MIS2-USDT Pool',
   //   contract: 'USDTMISLPTokenSharePool',

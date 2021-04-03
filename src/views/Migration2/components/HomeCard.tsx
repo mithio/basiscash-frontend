@@ -34,7 +34,7 @@ export const HomeCard: React.FC<HomeCardProps> = ({
   return (
     <Wrapper>
       <CardHeader color={headerColor}>{title}</CardHeader>
-      <CardHeader color={headerColor}>V2 to V3</CardHeader>
+      <CardHeader color={headerColor}>Curve V1 to Curve V2</CardHeader>
       <StyledCards>
         <CardBody backgroundImg={backgroundImg}>
           <CardContent>
@@ -95,7 +95,7 @@ export const HomeCard2: React.FC<HomeCard2Props> = ({
   return (
     <Wrapper>
       <CardHeader color={headerColor}>{title}</CardHeader>
-      <CardHeader color={headerColor}>V2 to V3</CardHeader>
+      <CardHeader color={headerColor}>Curve V1 to Curve V2</CardHeader>
       {clickEvent ? <StyledCards2>
         <CardBody backgroundImg={micCardBorderClicked}>
           <CardContent>
