@@ -11,6 +11,7 @@ import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
 import curvDepositorABI from './curvDepositor.json';
 import lockedStake from './lockedStake.json';
+import Transaction from '../components/TopBar/components/Transaction';
 
 /**
  * An API module of Basis Cash contracts.
@@ -35,6 +36,7 @@ export class BasisCash {
   MIC2: ERC20;
   MIS2: ERC20;
   MIS3: ERC20;
+  OldLPTokens: ERC20;
   mic3crv: Contract;
   mis2Usdt: Contract;
   mis3Usdt: Contract;
@@ -65,6 +67,7 @@ export class BasisCash {
     this.MIC2 = new ERC20(deployments.MIC2.address, provider, 'MIC2');
     this.MIS2 = new ERC20(deployments.MIS2.address, provider, 'MIS2');
     this.MIS3 = new ERC20(deployments.MIS3.address, provider, 'MIS3');
+    this.OldLPTokens = new ERC20(deployments.OldPool.address, provider, 'OldPool');
     
 
     // SushiSwap Pair
@@ -574,20 +577,19 @@ export class BasisCash {
   }
 
   async migratecv1tocv2(){
-    const CurveLPMigrator = this.contracts['CurveLPMigrator'];
-    const oldpool = '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e';
-    const newpool = '0x2B26239f52420d11420bC0982571BFE091417A7d';
-    const balace = await this.mic23crv.balanceOf(this.myAccount);
-    const gas = await CurveLPMigrator.estimateGas.migrate_to_new_pool(); 
-    return await CurveLPMigrator.migrate_to_new_pool(oldpool, newpool, balace, this.gasOptions(gas));
-
+    const CurveLpMigrator = this.contracts['CurveLPMigrator'];
+    const _old_pool = '0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e';
+    const _new_pool = '0x2B26239f52420d11420bC0982571BFE091417A7d';
+    const _amount = await this.OldLPTokens.balanceOf(this.myAccount);  
+    const gas = '500000';
+    const gasBigNum = BigNumber.from(gas);
+    return await CurveLpMigrator.migrate_to_new_pool(_old_pool, _new_pool, _amount, this.gasOptions(gasBigNum));
   }
 
   async exitlockedpool(){
    const MIC23CRVLockPool = this.contracts['MIC23CRVLockPool'];
    const gas = await MIC23CRVLockPool.estimateGas.exit();
    return await MIC23CRVLockPool.exit(this.gasOptions(gas));
-
   }
 
   async claimLockedRewards(){
@@ -599,8 +601,6 @@ export class BasisCash {
   async balanceLockedRewards(){
     const MIC23CRVLockPool = this.contracts['MIC23CRVLockPool'];
     return await MIC23CRVLockPool.balanceOf();
-
-
   }
 
   async migrateMisUsdtV2ToV3() {

@@ -32,7 +32,7 @@ export const HomeCard: React.FC<HomeCardProps> = ({
   from,
   to,
 }) => {
-  const endTime = useMigrationEndTime(contractName);
+  //const endTime = useMigrationEndTime(contractName);
   const v1Balance = useTokenBalance(from);
   const v2Balance = useTokenBalance(to);
 
@@ -58,16 +58,6 @@ export const HomeCard: React.FC<HomeCardProps> = ({
           </CardContent>
         </CardBody>
       </StyledCards>
-      {
-        endTime !== null &&
-        <StyledProgressCountdown>
-          <ProgressCountdown
-            base={new Date(Date.now())}
-            deadline={endTime}
-            description="End Time"
-          />
-        </StyledProgressCountdown>
-      }
     </Wrapper>
   );
 };
@@ -95,7 +85,7 @@ export const HomeCard2: React.FC<HomeCard2Props> = ({
   from,
   to,
 }) => {
-  const endTime = useMigrationEndTime(contractName);
+  //const endTime = useMigrationEndTime(contractName);
 
   const v1Balance = useTokenBalance(from);
   const v2Balance = useTokenBalance(to);
@@ -160,11 +150,11 @@ export const HomeCard2: React.FC<HomeCard2Props> = ({
         </CardBody>
       </StyledCards2> */}
       <StyledProgressCountdown clickEvent={clickEvent}>
-        <ProgressCountdown
-          base={new Date(Date.now())}
-          deadline={endTime}
-          description="End Time"
-        />
+        {/* <ProgressCountdown */}
+          {/* base={new Date(Date.now())} */}
+          {/* deadline={endTime} */}
+          {/* description="End Time" */}
+        {/* /> */}
       </StyledProgressCountdown>
     </Wrapper>
   );
