@@ -25,6 +25,7 @@ import Monetary from './views/Monetary';
 import Migration from './views/Migration';
 import Migration2 from './views/Migration2';
 import CurvPool from './views/CurvPool';
+import Swap from './views/Swap';
 
 const App: React.FC = () => {
   return (
@@ -54,6 +55,9 @@ const App: React.FC = () => {
           </Route>
           <Route path="/pool">
             <CurvPool />
+          </Route>
+          <Route path="/swap">
+            <Swap />
           </Route>
         </Switch>
       </Router>

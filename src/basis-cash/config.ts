@@ -17,6 +17,7 @@ export type Configuration = {
   gasLimitMultiplier: number;
 
   curvDepositor: string;
+  proxyaddLiquid: string;
 };
 
 export type EthereumConfig = {

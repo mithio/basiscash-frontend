@@ -10,6 +10,7 @@ import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
 import curvDepositorABI from './curvDepositor.json';
+import proxyabi from './proxyabi.json';
 import lockedStake from './lockedStake.json';
 import Transaction from '../components/TopBar/components/Transaction';
 
@@ -41,10 +42,8 @@ export class BasisCash {
   mis2Usdt: Contract;
   mis3Usdt: Contract;
   mic23crv: Contract;
- // lockedContract: Contract;
-
-
   curvDepositor: Contract;
+  proxyaddLiquid: Contract;
 
   constructor(cfg: Configuration) {
     const { deployments, externalTokens } = cfg;
@@ -117,8 +116,15 @@ export class BasisCash {
       provider,
     )
 
+    this.proxyaddLiquid = new Contract(
+      cfg.proxyaddLiquid,
+      proxyabi,
+      provider
+    )
+
     this.config = cfg;
     this.provider = provider;
+    
   }
 
   /**
@@ -326,6 +332,17 @@ export class BasisCash {
   }
 
   async MIC2earned(poolName: ContractName, account = this.myAccount): Promise<BigNumber> {
+    const pool = this.contracts[poolName];
+    try {
+      return await pool.rewardsPaid(account);
+    } catch (err) {
+      console.error(`Failed to call earned() on pool ${pool.address}: ${err.stack}`);
+      return BigNumber.from(0);
+    }
+  }
+
+
+  async MIC2Paid(poolName: ContractName, account = this.myAccount): Promise<BigNumber> {
     const pool = this.contracts[poolName];
     try {
       return await pool.getRedeemableReward(account);
@@ -634,18 +651,66 @@ export class BasisCash {
     }
   }
 
-  async depositCurvPool(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> {
-    const fn = 'add_liquidity(address,uint256[4],uint256)';
-    const gas = await this.curvDepositor.estimateGas[fn](
-      '0x2B26239f52420d11420bC0982571BFE091417A7d',
-      [mic2Amount, '0', '0', usdtAmount],
-      '1',
-    );
-    return await this.curvDepositor[fn](
-      '0x2B26239f52420d11420bC0982571BFE091417A7d',
-      [mic2Amount, '0', '0', usdtAmount],
-      '1',
-      this.gasOptions(gas),
-    )
+async SwapMic(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> {
+    const ProxyCurve = this.contracts['ProxyCurve'];
+    const gas = await ProxyCurve.estimateGas.exchangeMIC(3, mic2Amount, usdtAmount);
+    return await ProxyCurve.exchangeMIC(3, mic2Amount, usdtAmount, this.gasOptions(gas));
   }
+
+  
+
+  async depositCurvPool(mic2Amount: BigNumber): Promise<TransactionResponse> { //single sided deposit 
+    const ProxyCurve = this.contracts['ProxyCurve'];
+    //const fn = 'add_liquidity(uint256[2],uint256)';
+    //const gas = '500000';
+    //const gasBigNum = BigNumber.from(gas);
+    const gas = await ProxyCurve.estimateGas.add_liquidity(
+      mic2Amount,
+         '1',
+    );
+
+    return await ProxyCurve.add_liquidity(
+      mic2Amount,
+         '1',
+       this.gasOptions(gas),
+    )
+    // const gas = await this.curvDepositor.estimateGas[fn](
+      // '0x2B26239f52420d11420bC0982571BFE091417A7d',
+      // [mic2Amount, '0', '0', usdtAmount],
+      // '1',
+    // );
+   // return await this.ProxyCurve.add_liquidity(
+     // '0x2B26239f52420d11420bC0982571BFE091417A7d',
+    //  [mic2Amount, '0', '0', usdtAmount],
+    //  '1',
+    //  this.gasOptions(gasBigNum),
+   // )
+  }
+
+
+  async depositCurvPoolboth(mic2Amount: BigNumber, usdtAmount: BigNumber): Promise<TransactionResponse> { //double sided 
+    const addLiquid = this.contracts['proxyaddLiquid'];
+    //const fn = 'add_liquidity(uint256[2],uint256)';
+    const gas = '500000';
+    const gasBigNum = BigNumber.from(gas);
+    
+
+    return await addLiquid.add_liquidity(
+      [mic2Amount, '0', '0', usdtAmount],
+         '1',
+       this.gasOptions(gasBigNum),
+    )
+    // const gas = await this.curvDepositor.estimateGas[fn](
+      // '0x2B26239f52420d11420bC0982571BFE091417A7d',
+      // [mic2Amount, '0', '0', usdtAmount],
+      // '1',
+    // );
+   // return await this.ProxyCurve.add_liquidity(
+     // '0x2B26239f52420d11420bC0982571BFE091417A7d',
+    //  [mic2Amount, '0', '0', usdtAmount],
+    //  '1',
+    //  this.gasOptions(gasBigNum),
+   // )
+  }
+
 }
