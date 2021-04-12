@@ -8,6 +8,7 @@ import { TokenStat } from '../../basis-cash/types';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useEarnings from '../../hooks/useEarnings';
 import useEarningsMIC2 from '../../hooks/useEarningsMIC2';
+import usePaidMIC2 from '../../hooks/usePaidMIC2';
 import useHarvest from '../../hooks/useHarvest';
 import useStakedBalance from '../../hooks/useStakedBalance';
 import useModal from '../../hooks/useModal';
@@ -30,14 +31,15 @@ const LockedCard: React.FC<LockedCardProps> = ({ bank }) => {
   const [approveStatus, approve] = useApprove(bank.depositToken, bank.address);
   const basisCash = useBasisCash();
   const earnings = useEarningsMIC2(bank.contract);
+  const paidMIC = usePaidMIC2(bank.contract);
   const { onReward } = useHarvest(bank);
 
   const cashStats = useCashStats();
   const shareStats = useShareStats();
 
  // const MIC2rewards = useEarnings('MIC23CRVLockPool');
-  const realMIC = getDisplayBalance(earnings);
-  const realMIC1 = (parseInt(realMIC) / 10) * 0.25;
+  const realMIC = (parseFloat(getDisplayBalance(paidMIC)) * 0.25) - (parseFloat(getDisplayBalance(earnings)) * 0.25);
+  //const realMIC1 = (parseInt(realMIC)) * 0.25;
   
 
   const tokenBalance = useTokenBalance(bank.depositToken);
@@ -91,7 +93,7 @@ const LockedCard: React.FC<LockedCardProps> = ({ bank }) => {
         <StyledSubtitle>Claim your {bank.earnTokenName}</StyledSubtitle>
         <StyledSubtitle>Note: Clicking Exit will claim your rewards, and exit the pool.</StyledSubtitle>
         <StyledReward>
-          <StyledRewardValue>{realMIC1}</StyledRewardValue>
+          <StyledRewardValue>{realMIC.toFixed(3)}</StyledRewardValue>
           &nbsp;
           <StyledRewardToken>{bank.earnTokenName}</StyledRewardToken>
         </StyledReward>

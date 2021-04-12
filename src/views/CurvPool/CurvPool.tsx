@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import Page from '../../components/Page';
 import useBasisCash from '../../hooks/useBasisCash';
-
+import useCashStats from '../../hooks/useCashStats';
 import TokenInput from '../../components/TokenInput';
 import useTokenBalance from '../../hooks/useTokenBalance';
 import Button from '../../components/Button';
@@ -15,16 +15,18 @@ const CurvPool: React.FC = () => {
   const { account } = useWallet();
 
   const basisCash = useBasisCash();
+  const micStats = useCashStats();
+  var PRICEMIC; 
 
   const mic2Balance = useTokenBalance(basisCash.MIC2);
   const usdtBalance = useTokenBalance(basisCash.USDT);
 
-  const [mic2Val, setMic2Val] = useState('0')
+  const [mic2Val, setMic2Val] = useState('')
   const handleMic2Change = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     setMic2Val(e.currentTarget.value)
   }, [setMic2Val])
 
-  const [usdtVal, setUsdtVal] = useState('0')
+  const [usdtVal, setUsdtVal] = useState('')
   const handleUsdtChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     setUsdtVal(e.currentTarget.value)
   }, [setUsdtVal])
@@ -45,15 +47,21 @@ const CurvPool: React.FC = () => {
     setUsdtVal(usdtFullBalance)
   }, [usdtFullBalance, setUsdtVal])
 
-  const [mic2ApproveStatus, approveMic2] = useApprove(basisCash.MIC2, basisCash.curvDepositor.address);
-  const [usdtApproveStatus, approveUsdt] = useApprove(basisCash.USDT, basisCash.curvDepositor.address);
+  const [mic2ApproveStatus1, approveMic2] = useApprove(basisCash.MIC2, basisCash.contracts['ProxyCurve'].address);
+  const [usdtApproveStatus1, approveUsdt] = useApprove(basisCash.USDT, basisCash.contracts['ProxyCurve'].address);
 
   const depositReady = useMemo(() => {
-    return mic2ApproveStatus === ApprovalState.APPROVED // todo
-      || usdtApproveStatus === ApprovalState.APPROVED
+    return mic2ApproveStatus1 === ApprovalState.APPROVED // todo
+     // && usdtApproveStatus1 === ApprovalState.APPROVED
+      && mic2Val !== ''
       && mic2Val !== '0'
-      || usdtVal !== '0'
-  }, [mic2ApproveStatus, usdtApproveStatus, mic2Val, usdtVal]);
+     // && usdtVal !== ''
+  }, [mic2ApproveStatus1, usdtApproveStatus1, mic2Val, usdtVal]);
+
+  if (basisCash && micStats){
+    PRICEMIC = parseFloat(micStats.priceInUSDT);
+ }
+ const fee =  (1 - (PRICEMIC * PRICEMIC))*100;
 
   const { onDeposit } = useCurvDeposit();
 
@@ -61,34 +69,53 @@ const CurvPool: React.FC = () => {
     <Page>
       {!!account ? (
         <Card>
-          <CardTitle>MIC2-3CRV Pool</CardTitle>
+          <CardTitle>Add MIC Liqudity</CardTitle>
           <TokenInput
             max={mic2FullBalance}
-            symbol='MIC2'
+            symbol='MIC'
             onChange={handleMic2Change}
             onSelectMax={handleSelectMic2Max}
             value={mic2Val} />
-          <TokenInput
-            max={usdtFullBalance}
-            symbol='USDT'
-            onChange={handleUsdtChange}
-            onSelectMax={handleSelectUsdtMax}
-            value={usdtVal} />
+          {/* <TokenInput */}
+            {/* max={usdtFullBalance} */}
+            {/* symbol='USDT' */}
+            {/* onChange={handleUsdtChange} */}
+            {/* onSelectMax={handleSelectUsdtMax} */}
+            {/* value={usdtVal} /> */}
 
-          {mic2ApproveStatus !== ApprovalState.APPROVED && (
+      <StyledMaxTexts>
+      <StyledMaxText></StyledMaxText>
+      </StyledMaxTexts>
+      <StyledMaxTexts>
+      <StyledMaxText>Note: Adding single-sided MIC Liquditiy will</StyledMaxText>
+      </StyledMaxTexts>
+      <StyledMaxTexts>
+      <StyledMaxText> incur a tax equvialent to selling MIC.</StyledMaxText>
+      </StyledMaxTexts>
+      <StyledMaxTexts>
+      <StyledMaxText>Tax at Current Price: {fee}%  </StyledMaxText>
+      </StyledMaxTexts>
+
+
+          {mic2ApproveStatus1 !== ApprovalState.APPROVED && (
             <ButtonWrapper>
-              <Button text='Approve MIC2' onClick={approveMic2} />
+              <Button text='Approve MIC' onClick={approveMic2} />
             </ButtonWrapper>
           )}
-          {usdtApproveStatus !== ApprovalState.APPROVED && (
-            <ButtonWrapper>
-              <Button text='Approve USDT' onClick={approveUsdt} />
-            </ButtonWrapper>
-          )}
+          {/* {usdtApproveStatus1 !== ApprovalState.APPROVED && ( */}
+            {/* //<ButtonWrapper> */}
+              {/* //<Button text='Approve USDT' onClick={approveUsdt} /> */}
+            {/* //</ButtonWrapper> */}
+          {/* )} */}
           <ButtonWrapper>
-            <Button text='Add Liquidity' disabled={!depositReady} onClick={() => onDeposit(mic2Val, usdtVal)} />
+            <Button text='Add Liquidity' disabled={!depositReady} onClick={() => onDeposit(mic2Val, usdtVal)} /> 
+            {/* <Button text='Add Liquidity' onClick={() => onDeposit(mic2Val, usdtVal)} /> */}
           </ButtonWrapper>
-          <Link href="https://crv.finance/liquidity" target={"_blank"} rel={"noopener noreferrer"}>Remove Liquidity on crv.finance</Link>
+
+          
+
+
+          <Link href="https://crv.finance/liquidity" target={"_blank"} rel={"noopener noreferrer"}>Add Stablecoin Liquidity on crv.finance</Link>
         </Card>
       ) : (
         <UnlockWallet />
@@ -117,6 +144,22 @@ const Link = styled.a`
   padding-top: ${props => props.theme.spacing[4]}px;
   color: white;
 `
+
+const StyledMaxTexts = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const StyledMaxText = styled.div`
+  align-items: center;
+  color: ${props => props.theme.color.white};
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  height: 30px;
+  justify-content: flex-end;
+  `
+
 
 const Card = styled.div`
   display: flex;

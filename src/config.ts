@@ -38,7 +38,9 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 3000,
     gasLimitMultiplier: 1.1,
-    curvDepositor: '0xa79828df1850e8a3a3064576f380d90aecdd3359',
+    curvDepositor: '0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
+    proxyaddLiquid: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    //swapMic:'0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
   },
   production: {
     chainId: ChainId.MAINNET,
@@ -75,7 +77,9 @@ const configurations: { [env: string]: Configuration } = {
     boardroomLaunchesAt: new Date('2021-01-03T02:00:00Z'),
     refreshInterval: 30000,
     gasLimitMultiplier: 1.7,
-    curvDepositor: '0xa79828df1850e8a3a3064576f380d90aecdd3359',
+    curvDepositor: '0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
+    proxyaddLiquid: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    //swapMic:'0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
   },
 };
 
