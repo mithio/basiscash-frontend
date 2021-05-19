@@ -32,6 +32,7 @@ const configurations: { [env: string]: Configuration } = {
       'MIC23CRVLockPool': ['0xE144303f7FC3E99A9dE5474fD6c7B40add83a1dA',18], //Locked Pool
       'MIS2_USDT-SUSHI-LPv2': ['0xf9fF921E63B525A73dD3cF57463da53138358A49', 18],
       'MIS3_USDT-SUSHI-LPv2': ['0x097b21e4784c2b224fd8b880939f75b2e9f4dba5', 18],
+      'feeChecker': ['0xe85b4F11A4112ddafC807e1847bf891D81229A1C',18],
     },
     baseLaunchDate: new Date('2020-12-30T02:00:00Z'),
     bondLaunchesAt: new Date('2021-01-03T02:00:00Z'),
@@ -40,6 +41,7 @@ const configurations: { [env: string]: Configuration } = {
     gasLimitMultiplier: 1.1,
     curvDepositor: '0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
     proxyaddLiquid: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    //feeChecker: '0xe85b4F11A4112ddafC807e1847bf891D81229A1C',
     //swapMic:'0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
   },
   production: {
@@ -71,6 +73,7 @@ const configurations: { [env: string]: Configuration } = {
       'MIC23CRVLockPool': ['0xE144303f7FC3E99A9dE5474fD6c7B40add83a1dA',18], //Locked Pool
       'MIS2_USDT-SUSHI-LPv2': ['0xf9fF921E63B525A73dD3cF57463da53138358A49', 18],
       'MIS3_USDT-SUSHI-LPv2': ['0x097b21e4784c2b224fd8b880939f75b2e9f4dba5', 18],
+      'feeChecker': ['0xe85b4F11A4112ddafC807e1847bf891D81229A1C',18],
     },
     baseLaunchDate: new Date('2020-12-30T02:00:00Z'),
     bondLaunchesAt: new Date('2021-01-03T02:00:00Z'),
@@ -79,6 +82,7 @@ const configurations: { [env: string]: Configuration } = {
     gasLimitMultiplier: 1.7,
     curvDepositor: '0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
     proxyaddLiquid: '0x7568A35Af990Cb41216a75DA8CA203Bcac4b8dF2',
+    //feeChecker: '0xe85b4F11A4112ddafC807e1847bf891D81229A1C',
     //swapMic:'0x9b29c7DB8026b146029a59Ac50881bA752EB7a51',
   },
 };

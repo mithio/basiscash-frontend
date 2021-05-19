@@ -1,6 +1,6 @@
 import { Fetcher, Route, Token } from '@sushiswap/sdk';
 import { Configuration } from './config';
-import { ContractName, ShareMetric, SushiSwapPoolMISRemain, TokenStat, TreasuryAllocationTime } from './types';
+import { ContractName, ShareMetric, SushiSwapPoolMISRemain, TokenStat, TreasuryAllocationTime, Tax } from './types';
 import { BigNumber, Contract, ContractInterface, ethers, Overrides } from 'ethers';
 import { decimalToBalance } from './ether-utils';
 import { TransactionResponse } from '@ethersproject/providers';
@@ -9,6 +9,7 @@ import { getDisplayBalance } from '../utils/formatBalance';
 import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
+import feecheckerABI from './feechecker.json';
 import curvDepositorABI from './curvDepositor.json';
 import proxyabi from './proxyabi.json';
 import lockedStake from './lockedStake.json';
@@ -44,6 +45,7 @@ export class BasisCash {
   mic23crv: Contract;
   curvDepositor: Contract;
   proxyaddLiquid: Contract;
+  feeChecker: Contract;
 
   constructor(cfg: Configuration) {
     const { deployments, externalTokens } = cfg;
@@ -93,6 +95,12 @@ export class BasisCash {
     this.mic3crv = new Contract(
       externalTokens['MICv23CRV'][0],
       curvPoolABI,
+      provider,
+    )
+
+    this.feeChecker = new Contract(
+      externalTokens['feeChecker'][0],
+      feecheckerABI,
       provider,
     )
 
@@ -186,6 +194,12 @@ export class BasisCash {
     };
   }
 
+  async getRealTax(): Promise<Tax>{
+    return{
+      tax: await this.getTax1(),
+    };
+  }
+
   /**
    * @returns Estimated Basis Cash (BAC) price data,
    * calculated by 1-day Time-Weight Averaged Price (TWAP).
@@ -203,6 +217,8 @@ export class BasisCash {
       totalSupply,
     };
   }
+
+ 
 
   async getCashPriceInLastTWAP(): Promise<BigNumber> {
     const { Treasury } = this.contracts;
@@ -298,10 +314,16 @@ export class BasisCash {
 
   async getMIC2PriceFromCurv(): Promise<string> {
     await this.provider.ready;
-
     const priceInUSDT = await this.mic3crv.get_dy(0, 1, ethers.constants.WeiPerEther);
     return getDisplayBalance(priceInUSDT, 18)
   }
+
+  async getTax1(): Promise<string>{
+    await this.provider.ready; 
+    const taxfromoracle = await this.feeChecker.calculateTaxPercent();
+    return taxfromoracle
+   }
+
 
   /**
    * Buy bonds with cash.

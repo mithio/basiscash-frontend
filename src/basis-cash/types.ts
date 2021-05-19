@@ -29,6 +29,9 @@ export interface Vault extends VaultInfo {
   address: string;
   token: ERC20;
 }
+export type Tax = {
+ tax: string;
+}
 
 export type TokenStat = {
   priceInUSDT: string;
