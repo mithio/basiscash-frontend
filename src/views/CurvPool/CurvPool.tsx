@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Page from '../../components/Page';
 import useBasisCash from '../../hooks/useBasisCash';
 import useCashStats from '../../hooks/useCashStats';
+import useTaxStats from '../../hooks/useTaxStats';
 import TokenInput from '../../components/TokenInput';
 import useTokenBalance from '../../hooks/useTokenBalance';
 import Button from '../../components/Button';
@@ -16,7 +17,9 @@ const CurvPool: React.FC = () => {
 
   const basisCash = useBasisCash();
   const micStats = useCashStats();
+  const taxStats = useTaxStats();
   var PRICEMIC; 
+  var fee1;
 
   const mic2Balance = useTokenBalance(basisCash.MIC2);
   const usdtBalance = useTokenBalance(basisCash.USDT);
@@ -58,10 +61,20 @@ const CurvPool: React.FC = () => {
      // && usdtVal !== ''
   }, [mic2ApproveStatus1, usdtApproveStatus1, mic2Val, usdtVal]);
 
-  if (basisCash && micStats){
+  if (basisCash && micStats && taxStats){
     PRICEMIC = parseFloat(micStats.priceInUSDT);
+    fee1 = parseFloat(taxStats.tax);
  }
  const fee =  (1 - (PRICEMIC * PRICEMIC))*100;
+  
+ const fee2 = fee1 / 10000000000000000000000000000000000;
+ 
+ //const fee2 = fee1;
+ 
+
+ //const fee2 = getDisplayBalance(fee1, 18);
+ 
+ 
 
   const { onDeposit } = useCurvDeposit();
 
@@ -93,7 +106,7 @@ const CurvPool: React.FC = () => {
       <StyledMaxText> incur a tax equvialent to selling MIC.</StyledMaxText>
       </StyledMaxTexts>
       <StyledMaxTexts>
-      <StyledMaxText>Tax at Current Price: {fee}%  </StyledMaxText>
+      <StyledMaxText>Tax at Current Price: {fee2.toFixed(3)}%  </StyledMaxText>
       </StyledMaxTexts>
 
 

@@ -18,6 +18,7 @@ export type Configuration = {
 
   curvDepositor: string;
   proxyaddLiquid: string;
+ // feeChecker: string; 
 };
 
 export type EthereumConfig = {

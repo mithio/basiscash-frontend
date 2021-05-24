@@ -12,6 +12,7 @@ import useApprove, { ApprovalState } from '../../hooks/useApprove';
 import { useWallet } from 'use-wallet';
 import useCurvDeposit from '../../hooks/useCurvDeposit';
 import useCurvSwap from '../../hooks/useCurvSwap';
+import useTaxStats from '../../hooks/useTaxStats';
 import useCashStats from '../../hooks/useCashStats';
 import { couldStartTrivia } from 'typescript';
 import { parseUnits } from 'ethers/lib/utils';
@@ -23,6 +24,7 @@ const Swap: React.FC = () => {
   const { account } = useWallet();
   const basisCash = useBasisCash();
   const micStats = useCashStats();
+  const taxStats = useTaxStats();
 
   const mic2Balance = useTokenBalance(basisCash.MIC2);
   const usdtBalance = useTokenBalance(basisCash.USDT);
@@ -30,6 +32,7 @@ const Swap: React.FC = () => {
   const square = '2';
   var PRICE = '';
   var PRICEMIC;
+  var fee1;
 
   const [usdtVal, setUsdtVal] = useState('')
   const [mic2Val, setMic2Val] = useState('')
@@ -88,15 +91,19 @@ const Swap: React.FC = () => {
     && mic2Val !== '0'
   }, [mic2ApproveStatus, mic2Val, usdtVal]);
 
- if (basisCash && micStats){
+  if (basisCash && micStats && taxStats){
     PRICEMIC = parseFloat(micStats.priceInUSDT);
+    fee1 = parseFloat(taxStats.tax);
  }
  
+  const fee3 = fee1 / 1000000000000000000000000000000000000;
   const fee =  parseInt(one) - (PRICEMIC * PRICEMIC);
-  const USDTrec = (parseInt(mic2Val) * ((1-fee) * PRICEMIC)); 
+  const USDTrec = (parseInt(mic2Val) * ((1-fee3) * PRICEMIC)); 
   PRICE = USDTrec.toString();
   if (PRICE == 'NaN') PRICE = '0';
   var USDTrec1 = parseFloat(PRICE);
+  const fee2 = fee1 / 10000000000000000000000000000000000;
+ 
   
   const { onSwap } = useCurvSwap();
 
@@ -111,7 +118,7 @@ const Swap: React.FC = () => {
             max={mic2FullBalance}
             pricemic={PRICEMIC}
             USDT={USDTrec1.toFixed(3)}
-            TAX={fee * 100}
+            TAX={fee2.toFixed(3)}
             symbol='MIC'
             onChange={handleMic2Change}
             onSelectMax={handleSelectMic2Max}
