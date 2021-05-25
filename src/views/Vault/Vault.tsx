@@ -23,7 +23,7 @@ const Vault: React.FC = () => {
     <>
       <PageHeader
         subtitle={`Deposit ${vault?.tokenName} and earn ${vault?.tokenName}`}
-        title={vault?.name + ' (v1)'}
+        title={vault?.name }
       />
       <StyledVault>
         <StyledCardsWrapper>
@@ -47,16 +47,22 @@ const Vault: React.FC = () => {
 const LPTokenHelpText: React.FC<{ vault: VaultEntity }> = ({ vault }) => {
   let pairName: string;
   let sushiswapUrl: string;
+  let dex: string;
+  let symbol: string;
   if (vault.tokenName.includes('MIC')) {
     pairName = 'MIC-USDT pair';
-    sushiswapUrl = 'https://sushiswap.fi/pair/0xC9cB53B48A2f3A9e75982685644c1870F1405CCb';
+    sushiswapUrl = 'https://crv.to/pool';
+    dex = 'Curve Swaps';
+    symbol = '';
   } else {
     pairName = 'MIS-USDT pair';
-    sushiswapUrl = 'https://sushiswap.fi/pair/0x066F3A3B7C8Fa077c71B9184d862ed0A4D5cF3e0';
+    sushiswapUrl = 'https://app.sushi.com/add/0x024b6e7dc26f4d5579bdd936f8d7bc31f2339999/0xdac17f958d2ee523a2206206994597c13d831ec7';
+    dex = 'SushiSwap';
+    symbol = '🍣';
   }
   return (
     <StyledLink href={sushiswapUrl} target="_blank">
-      {`🍣  Provide liquidity to ${pairName} on SushiSwap  🍣`}
+      {`${symbol}  Provide liquidity to ${pairName} on ${dex}  ${symbol}`}
     </StyledLink>
   );
 };

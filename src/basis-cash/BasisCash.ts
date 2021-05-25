@@ -73,12 +73,12 @@ export class BasisCash {
 
     // SushiSwap Pair
     this.bacDai = new Contract(
-      externalTokens['MIC_USDT-SUSHI-LPv2'][0],
-      IUniswapV2PairABI,
+      externalTokens['MIC_USDT-CRV-LP'][0],
+      curvPoolABI,
       provider,
     );
     this.basDai = new Contract(
-      externalTokens['MIS_USDT-SUSHI-LPv2'][0],
+      externalTokens['MIS_USDT-SUSHI-LPv3'][0],
       IUniswapV2PairABI,
       provider,
     )
