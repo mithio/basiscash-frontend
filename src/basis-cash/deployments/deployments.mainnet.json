@@ -11014,7 +11014,7 @@
     ]
   },
   "MICUSDTVault": {
-    "address": "0x22919Fd1E54B626ae1b065d9f4Aa57FF1244F522",
+    "address": "0xa1cFF594D24D9151Ae7A5BB6b8e51C1b79657D9a",
     "abi": [
       {
         "inputs": [
@@ -11226,7 +11226,7 @@
     ]
   },
   "MISUSDTVault": {
-    "address": "0x8FcEeFb678c7C4a34D460C6bC95dAd1D655D5da1",
+    "address": "0xEA073804f494028246fBFec6e12AFE9C7E9afB2f",
     "abi": [
       {
         "inputs": [
