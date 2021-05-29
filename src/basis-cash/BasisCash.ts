@@ -9,7 +9,6 @@ import { getDisplayBalance } from '../utils/formatBalance';
 import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
-import newcurvPoolABI from './new3crvPool.abi.json';
 import feecheckerABI from './feechecker.json';
 import curvDepositorABI from './curvDepositor.json';
 import proxyabi from './proxyabi.json';
