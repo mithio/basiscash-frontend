@@ -9,6 +9,7 @@ import { getDisplayBalance } from '../utils/formatBalance';
 import { getDefaultProvider } from '../utils/provider';
 import IUniswapV2PairABI from './IUniswapV2Pair.abi.json';
 import curvPoolABI from './3crvPool.abi.json';
+import newcurvPoolABI from './new3crvPool.abi.json';
 import feecheckerABI from './feechecker.json';
 import curvDepositorABI from './curvDepositor.json';
 import proxyabi from './proxyabi.json';
@@ -46,6 +47,7 @@ export class BasisCash {
   curvDepositor: Contract;
   proxyaddLiquid: Contract;
   feeChecker: Contract;
+  MIC23CRVf: Contract;
 
   constructor(cfg: Configuration) {
     const { deployments, externalTokens } = cfg;
@@ -73,10 +75,10 @@ export class BasisCash {
 
     // SushiSwap Pair
     this.bacDai = new Contract(
-      externalTokens['MIC_USDT-CRV-LP'][0],
+      externalTokens['MIC23CRV-f'][0],
       curvPoolABI,
       provider,
-    );
+    )
     this.basDai = new Contract(
       externalTokens['MIS_USDT-SUSHI-LPv3'][0],
       IUniswapV2PairABI,

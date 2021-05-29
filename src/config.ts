@@ -25,7 +25,7 @@ const configurations: { [env: string]: Configuration } = {
       COMP: ['0xc00e94Cb662C3520282E6f5717214004A7f26888', 18],
       AAVE: ['0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', 18],
       SUSHI: ['0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18],
-      'MIC_USDT-CRV-LP': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
+      'MIC23CRV-f': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
       'MIS_USDT-SUSHI-LPv3': ['0x097b21e4784c2B224FD8B880939f75B2E9f4dBa5', 18],
       'MICv2_3CRV': ['0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e', 18], //old pool v1
       'MICv23CRV': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18], //new pool v2
@@ -66,7 +66,7 @@ const configurations: { [env: string]: Configuration } = {
       COMP: ['0xc00e94Cb662C3520282E6f5717214004A7f26888', 18],
       AAVE: ['0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', 18],
       SUSHI: ['0x6B3595068778DD592e39A122f4f5a5cF09C90fE2', 18],
-      'MIC_USDT-CRV-LP': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
+      'MIC23CRV-f': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
       'MIS_USDT-SUSHI-LPv3': ['0x097b21e4784c2B224FD8B880939f75B2E9f4dBa5', 18],
       'MICv2_3CRV': ['0x0F8c89d3fB0b502732b338f1dfb3c465Dc856C8e', 18],
       'MICv23CRV': ['0x2B26239f52420d11420bC0982571BFE091417A7d', 18],
@@ -256,14 +256,14 @@ export const vaultDefinitions: { [contractName: string]: VaultInfo } = {
   MISUSDTVault: {
     name: 'MIS-USDT-LP',
     contract: 'MISUSDTVault',
-    tokenName: 'MIS_USDT-SUSHI-LPv3',
+    tokenName: 'MIS3_USDT-SUSHI-LPv2',
     finished: false,
     sort: 1,
   },
   MICUSDTVault: {
     name: 'MIC-USDT-LP',
     contract: 'MICUSDTVault',
-    tokenName: 'MIC_USDT-CRV-LP',
+    tokenName: 'MIC23CRV-f',
     finished: false,
     sort: 1,
   }
