@@ -116,7 +116,7 @@ const Deposit: React.FC<DepositProps> = ({ vault }) => {
                 </IconButton>
                 <StyledActionSpacer />
                 <IconButton
-                  disabled={true}
+                  disabled={false}
                   onClick={() => (vault.finished ? null : onPresentDeposit())}
                 >
                   <AddIcon />

@@ -43,6 +43,8 @@ const logosBySymbol: {[title: string]: string} = {
   'MIS_USDT-SUSHI-LPv2': misLogo,
   'MIC_USDT-CRV-LP': micLogo,
   'MIS_USDT-SUSHI-LPv3': misLogo,
+  'MIS3_USDT-SUSHI-LPv2': misLogo,
+  'MIC23CRV-f': micLogo,
   'MIC': micLogo,
   'MIS': misLogo,
   'MIB': mibLogo,

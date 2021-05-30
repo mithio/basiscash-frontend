@@ -46,6 +46,7 @@ export class BasisCash {
   curvDepositor: Contract;
   proxyaddLiquid: Contract;
   feeChecker: Contract;
+  MIC23CRVf: Contract;
 
   constructor(cfg: Configuration) {
     const { deployments, externalTokens } = cfg;
@@ -73,10 +74,10 @@ export class BasisCash {
 
     // SushiSwap Pair
     this.bacDai = new Contract(
-      externalTokens['MIC_USDT-CRV-LP'][0],
+      externalTokens['MIC23CRV-f'][0],
       curvPoolABI,
       provider,
-    );
+    )
     this.basDai = new Contract(
       externalTokens['MIS_USDT-SUSHI-LPv3'][0],
       IUniswapV2PairABI,
