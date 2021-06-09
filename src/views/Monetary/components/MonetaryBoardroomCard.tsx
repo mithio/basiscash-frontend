@@ -18,6 +18,7 @@ import useStakedBalanceOnBoardroom from '../../../hooks/useStakedBalanceOnBoardr
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
 import useInitiateRewardClaimFromBoardroom from '../../../hooks/useInitiateRewardClaimFromBoardroom';
 import usePendingWithdrawalTime from '../../../hooks/usePendingWithdrawalTime';
+import usePendingWithdrawalBal from '../../../hooks/usePendingWithdrawalBal';
 import useEarnings from '../../../hooks/useEarnings';
 import useModal from '../../../hooks/useModal';
 import useTokenBalance from '../../../hooks/useTokenBalance';
@@ -30,13 +31,19 @@ import useBoardroomVersion from '../../../hooks/useBoardroomVersion';
 import useApprove, { ApprovalState } from '../../../hooks/useApprove';
 import gift from '../../../assets/img/gift.png';
 import useStakedEffectiveBalanceOnBoardroom from '../../../hooks/useStakedEffectiveBalanceOnBoardroom';
+//import { getFullBalance } from '../utils/formatBalance';
 
 const MonetaryBoardroomCard: React.FC = () => {
   const { color } = useContext(ThemeContext);
   const { onReward } = useHarvestFromBoardroom();
   const { initiateRewardClaim } = useInitiateRewardClaimFromBoardroom();
   const pendingWithdrawalTime = usePendingWithdrawalTime();
-  var date = new Date(pendingWithdrawalTime * 1000);
+  const pendingWithdrawalBal = usePendingWithdrawalBal();
+  var datereal = pendingWithdrawalTime.toString();
+  var datereale = parseFloat(datereal);
+  var currentdate =  (Date.now() / 1000).toFixed(0);
+  var date = new Date(datereale * 1000);
+  var timediff = datereale - parseInt(currentdate);
   var formattedTime = date.toLocaleString("en-US");
 
   const basisCash = useBasisCash();
@@ -124,18 +131,23 @@ const MonetaryBoardroomCard: React.FC = () => {
         />
       </MonetaryCardFoot>
       <MonetaryCardEffectiveBalance
+        title='Rewards without claim initiated'
+        value={ earnedMIC? `${getDisplayBalance(earnedMIC)} MIC2`
+        : '-'
+    }
+      />
+      <MonetaryCardEffectiveBalance
         title='When you can withdraw'
-        value={ pendingWithdrawalTime ? formattedTime : '-'}
+        value={ pendingWithdrawalTime ? `${formattedTime}` : 
+         '-'}
       />
       <MonetaryCardFoot>
         <MonetaryCardFootCell
           title='Your Total Pending Rewards'
-          value={
-            earnedMIC
-              ? `${getDisplayBalance(earnedMIC)} MIC2`
+          value={ pendingWithdrawalBal ? `${getDisplayBalance(pendingWithdrawalBal)} MIC2`
               : '-'
           }
-          button={<MonetaryClaimAllButton text='Claim Pending Rewards' onClick={onReward} disabled={earnedMIC.eq(0)} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
+          button={<MonetaryClaimAllButton text='Claim Pending Rewards' onClick={onReward} disabled={timediff>10} icon={gift} backgroundColor="#43423F" colorHover="#DBC087" backgroundColorHover="#43423F" color="#DBC087" />}
         />
       </MonetaryCardFoot>
       {/* <MonetaryCardFoot>
