@@ -19,9 +19,9 @@ const useAPY = (vaultName: ContractName, poolAddr: string) => {
 
   const priceUSDT = 1.0;
 
-  const poolName =
-    vaultName === 'MICUSDTVault' ? 'USDTMICLPTokenSharePool' : 'USDTMISLPTokenSharePool';
-  const token = vaultName === 'MICUSDTVault' ? basisCash.BAC : basisCash.BAS;
+  const poolName = vaultName === 'MICUSDTVault' ? 'USDTMICLPTokenSharePool' : 'USDTMISLPTokenSharePool';
+  const token = vaultName === 'MICUSDTVault' ? basisCash.MIC2 : basisCash.MIS3;
+  const poolAddress = vaultName === 'MICUSDTVault' ? 'MIC23CRV-f' : 'MIS3_USDT-SUSHI-LPv2';
 
   useEffect(() => {
     const calcApy = async () => {
@@ -35,26 +35,34 @@ const useAPY = (vaultName: ContractName, poolAddr: string) => {
         const valueRewardedPerYear = priceMIS * misRewardsPerYear;
 
         const priceM = vaultName === 'MICUSDTVault' ? priceMIC : priceMIS;
-
         const numMInPairBN = await token.balanceOf(poolAddr);
         const numUSDTInPairBN = await basisCash.USDT.balanceOf(poolAddr);
 
         const numMInPair = getFullBalance(numMInPairBN);
         const numUSDTInPair = getFullBalance(numUSDTInPairBN, 6);
 
+
         const totalValueStaked = priceM * numMInPair + priceUSDT * numUSDTInPair;
+        
 
         const misAPY = valueRewardedPerYear / totalValueStaked;
 
-        const totalSupplyBN = await basisCash.totalSupply(poolName);
+        
+        const totalSupplyofPool = await basisCash.totalSupply(poolAddress);
+        const totalSupply = getFullBalance(totalSupplyofPool);
+
+
+       // const totalSupplyBN = await basisCash.totalSupply(poolName);
+        
+
         const balanceBN = await basisCash.totalBalanceOfVault(vaultName);
         const vaultTotalSupplyBN = await basisCash.totalSupply(vaultName);
 
         const balance = getFullBalance(balanceBN);
+
         const vaultTotalSupply = getFullBalance(vaultTotalSupplyBN);
         const ratio = vaultTotalSupply ? balance / vaultTotalSupply : 1;
-
-        const pricePerToken = totalValueStaked / getFullBalance(totalSupplyBN);
+        const pricePerToken = (totalValueStaked / totalSupply);
         const tvl = pricePerToken * balance;
 
         setApy({ apy: getCompoundingAPY(misAPY * 0.85), tvl, pricePerToken, ratio });

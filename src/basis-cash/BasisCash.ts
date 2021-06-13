@@ -61,8 +61,8 @@ export class BasisCash {
     for (const [symbol, [address, decimal]] of Object.entries(externalTokens)) {
       this.externalTokens[symbol] = new ERC20(address, provider, symbol, decimal); // TODO: add decimal
     }
-    this.BAC = new ERC20(deployments.Cash.address, provider, 'MIC');
-    this.BAS = new ERC20(deployments.Share.address, provider, 'MIS');
+    this.BAC = new ERC20(deployments.MIC2.address, provider, 'MIC2');
+    this.BAS = new ERC20(deployments.MIS3.address, provider, 'MIS3');
     this.BAB = new ERC20(deployments.Bond.address, provider, 'MIB');
     this.USDT = new ERC20(externalTokens['USDT'][0], provider, 'USDT');
 
@@ -465,6 +465,10 @@ export class BasisCash {
     const pool = this.contracts[poolName];
 
     try {
+      if (poolName == 'MIC23CRV-f'){
+        return await this.mic3crv.totalSupply();
+      }
+      else
       return await pool.totalSupply();
     } catch (err) {
       console.error(`Failed to call totalSupply() on contract ${pool.address}: ${err.stack}`);
@@ -537,9 +541,14 @@ export class BasisCash {
     return await Boardroom.balanceOf(this.myAccount);
   }
 
-  async pendingWithdrawalTime(): Promise<number> {
+  async pendingWithdrawalTime(): Promise<BigNumber> {
     const Boardroom = this.currentBoardroom();
     return await Boardroom.pendingWithdrawalTime(this.myAccount);
+  }
+
+  async pendingWithdrawalBal(): Promise<BigNumber> {
+    const Boardroom = this.currentBoardroom();
+    return await Boardroom.pendingWithdrawalBalance(this.myAccount);
   }
 
   async getStakedEffectiveSharesOnBoardroom(): Promise<BigNumber> {

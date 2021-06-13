@@ -3,12 +3,12 @@ import { BigNumber } from 'ethers';
 import useBasisCash from './useBasisCash';
 import config from '../config';
 
-  const usePendingWithdrawalTime  = () => {
+const usePendingWithdrawalBal  = () => {
   const [balance, setBalance] = useState(BigNumber.from(0));
   const basisCash = useBasisCash();
 
   const fetchBalance = useCallback(async () => {
-    setBalance(await basisCash.pendingWithdrawalTime());
+    setBalance(await basisCash.pendingWithdrawalBal());
   }, [basisCash?.isUnlocked]);
 
   useEffect(() => {
@@ -23,4 +23,4 @@ import config from '../config';
   return balance;
 };
 
-export default usePendingWithdrawalTime;
+export default usePendingWithdrawalBal;
